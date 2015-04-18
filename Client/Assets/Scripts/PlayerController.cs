@@ -24,11 +24,11 @@ public class PlayerController : MonoBehaviour {
 	public float maxVerticalSpeed { get{ return GlobalConfig.instance.maxVerticalSpeed * movementSpeedFactor; } }
 	public float maxHorizontalSpeed { get{ return GlobalConfig.instance.maxHorizontalSpeed * movementSpeedFactor; } }
 	public float walkingAccel { get{ return GlobalConfig.instance.walkingAccel; } }
-	public float groundFrictionAccel { get{ return GlobalConfig.instance.groundFrictionAccel; } }
-	public float airFrictionAccel { get{ return GlobalConfig.instance.airFrictionAccel; } }
+	public float groundFrictionHorizontalAccel { get{ return GlobalConfig.instance.groundFrictionHorizontalAccel; } }
+	public float airFrictionHorizontalAccel { get{ return GlobalConfig.instance.airFrictionHoizontalAccel; } }
 	public float airHorizontalAccel { get{ return GlobalConfig.instance.airHorizontalAccel; } }
-	public float wallFrictionAcc { get{ return GlobalConfig.instance.wallFrictionAcc; } }
-	public float wallMaxVerticalSpeed { get{ return GlobalConfig.instance.wallMaxVeticalSpeed; } }
+	public float wallFrictionVerticalAcc { get{ return GlobalConfig.instance.wallFrictionVerticalAcc; } }
+	public float wallMaxVerticalFallingSpeed { get{ return GlobalConfig.instance.wallMaxVerticalFallingSpeed; } }
 	public float airJumpHeight { get{ return GlobalConfig.instance.airJumpHeight; } }
 	public float maxJumpHeight { get{ return GlobalConfig.instance.maxJumpHeight; } }
 	public float minJumpHeight { get{ return GlobalConfig.instance.minJumpHeight; } }
@@ -37,10 +37,7 @@ public class PlayerController : MonoBehaviour {
 	public float groundJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
 	public float wallJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
 
-
-	public float attackSpeed { get{ return GlobalConfig.instance.attackSpeed; } }
-	public float respawnDelay { get{ return GlobalConfig.instance.respawnDelay; } }
-	public float delayBetweenProjectiles { get{ return GlobalConfig.instance.delayBetweenProjectiles / attackSpeedFactor; } }
+	public float attackDelay { get{ return GlobalConfig.instance.attackDelay; } }
 	public int initialHP { get{ return GlobalConfig.instance.initialHP; } }
 
 	public float wallJumpHorizontalSpeed { get{ return GlobalConfig.instance.wallJumpHorizontalSpeed; } }
@@ -295,7 +292,7 @@ public class PlayerController : MonoBehaviour {
 				currentSpeed += movementDirection * walkingAccel * deltaTime;
 			}
 			else {
-				ApplyFriction( groundFrictionAccel );
+				ApplyFriction( groundFrictionHorizontalAccel );
 			}
 		}
 		else if( physicsController.didHitLeft ) {
@@ -329,7 +326,7 @@ public class PlayerController : MonoBehaviour {
 				currentSpeed += movementDirection * airHorizontalAccel * deltaTime;
 			}
 			else {
-				ApplyFriction( airFrictionAccel );
+				ApplyFriction( airFrictionHorizontalAccel );
 			}
 		}
 
@@ -432,7 +429,7 @@ public class PlayerController : MonoBehaviour {
 		if( nextFireTime > MinigameTimeManager.instance.time ) {
 			yield break;
 		}
-		nextFireTime = MinigameTimeManager.instance.time + 1/attackSpeed;
+		nextFireTime = MinigameTimeManager.instance.time + attackDelay;
 		isAttacking = true;
 
 		ProjectileDirection projectileDirection = ProjectileDirection.FORWARD;
@@ -531,7 +528,7 @@ public class PlayerController : MonoBehaviour {
 		if( currentSpeed.y >= 0 ) {
 			return;
 		}
-		float deltaYSpeed = wallFrictionAcc * MinigameTimeManager.instance.deltaTime;
+		float deltaYSpeed = wallFrictionVerticalAcc * MinigameTimeManager.instance.deltaTime;
 		if( Mathf.Abs( currentSpeed.y ) <= deltaYSpeed ) {
 			currentSpeed.y = 0;
 			return;
@@ -539,7 +536,7 @@ public class PlayerController : MonoBehaviour {
 
 		isGrabbingToWall = true;
 		currentSpeed.y -= Mathf.Sign( currentSpeed.y ) * deltaYSpeed;
-		currentSpeed.y = currentSpeed.y < -wallMaxVerticalSpeed ? -wallMaxVerticalSpeed : currentSpeed.y;
+		currentSpeed.y = currentSpeed.y < -wallMaxVerticalFallingSpeed ? -wallMaxVerticalFallingSpeed : currentSpeed.y;
 	}
 
 	// ====================================================
