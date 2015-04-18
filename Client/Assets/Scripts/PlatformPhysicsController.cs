@@ -1,0 +1,157 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class PlatformPhysicsController : PhysicsController {
+
+	public Dictionary<Collider2D, CollisionInfo> currentCollisions = new Dictionary<Collider2D, CollisionInfo>();
+
+	// =====================================
+	public void Move( Vector2 deltaPos, Vector2 fromPosition ) {
+
+		currentCollisions.Clear();
+
+		Vector2 currentPos2D = fromPosition;
+		Vector2 worldPoint;
+		RaycastHit2D raycastHit;
+		
+		
+		//turning off the collider so the raycast doesn't collide with ourselves (FIXME? HACK?)
+		boxCollider.enabled = false;
+		
+		isGrounded = false;
+		didHitCeiling = false;
+		didHitLeft = false;
+		didHitRight = false;
+
+		float movementMagnitude = deltaPos.magnitude;
+		Vector2 movementDirection = deltaPos.normalized;
+		Vector2 offset = -movementDirection * LINECAST_OFFSET;
+
+		// check upper collisions
+		foreach( Vector2 point in upCollisionPoints ) {
+
+			worldPoint = point + currentPos2D + offset;
+			raycastHit = Physics2D.Raycast( worldPoint, movementDirection, movementMagnitude + LINECAST_OFFSET, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.up ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				Vector2 deltaPosCharacter = deltaPos - ( raycastHit.point - worldPoint + offset );
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPosCharacter,
+					forcedMovementDirection = Vector2.up
+				} );
+			}
+		
+			//check up
+			Vector2 worldPoint2 = point + currentPos2D;
+			raycastHit = Physics2D.Raycast( worldPoint2, Vector2.up, 0.01f, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.up ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPos,
+					forcedMovementDirection = Vector2.up
+				} );
+			}
+		}
+
+		// check lower collisions
+		foreach( Vector2 point in downCollisionPoints ) {
+
+			worldPoint = point + currentPos2D + offset;
+			raycastHit = Physics2D.Raycast( worldPoint, movementDirection, movementMagnitude + LINECAST_OFFSET, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.up ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				Vector2 deltaPosCharacter = deltaPos - ( raycastHit.point - worldPoint + offset );
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPosCharacter,
+					forcedMovementDirection = -Vector2.up
+				} );
+			}
+
+			//check down
+			Vector2 worldPoint2 = point + currentPos2D;
+			raycastHit = Physics2D.Raycast( worldPoint2, -Vector2.up, 0.01f, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.up ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPos,
+					forcedMovementDirection =  -Vector2.up
+				} );
+			}
+		}
+
+		// check right collisionsF
+		foreach( Vector2 point in rightCollisionPoints ) {
+
+			worldPoint = point + currentPos2D + offset;
+			raycastHit = Physics2D.Raycast( worldPoint, movementDirection, movementMagnitude + LINECAST_OFFSET, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.right ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				Vector2 deltaPosCharacter = deltaPos - ( raycastHit.point - worldPoint + offset );
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPosCharacter,
+					forcedMovementDirection = Vector2.right
+				} );
+			}
+
+
+			//check right
+			Vector2 worldPoint2 = point + currentPos2D;
+			raycastHit = Physics2D.Raycast( worldPoint2, Vector2.right, 0.01f, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.right ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPos,
+					forcedMovementDirection = Vector2.right
+				} );
+			}
+			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
+		}
+
+		// check left collisions
+		foreach( Vector2 point in leftCollisionPoints ) {
+
+			worldPoint = point + currentPos2D + offset;
+			raycastHit = Physics2D.Raycast( worldPoint, movementDirection, movementMagnitude + LINECAST_OFFSET, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.right ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				Vector2 deltaPosCharacter = deltaPos - ( raycastHit.point - worldPoint + offset );
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPosCharacter,
+					forcedMovementDirection = -Vector2.right
+				} );
+			}
+
+
+			//check left
+			Vector2 worldPoint2 = point + currentPos2D;
+			raycastHit = Physics2D.Raycast( worldPoint2, -Vector2.right, 0.01f, collisionLayerMask.value );
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.right ) ) > epsilon
+			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+					collider = raycastHit.collider,
+					deltaMovement = deltaPos,
+					forcedMovementDirection = -Vector2.right
+				} );
+			}
+			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
+		}
+
+		//turning on the collider on again(FIXME? HACK?)
+		boxCollider.enabled = true;
+	}
+
+}
+
+public struct CollisionInfo {
+	public Collider2D collider;
+	public Vector2 deltaMovement;
+	public Vector2 forcedMovementDirection;
+}
