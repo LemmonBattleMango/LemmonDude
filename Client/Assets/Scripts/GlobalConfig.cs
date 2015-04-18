@@ -27,13 +27,8 @@ public class GlobalConfig : DisposableSingleton<GlobalConfig> {
 	public float delayBetweenProjectiles = 2.0f;
 	public float projectileThrowingValue = 0.22f;
 
-	public float attackMovementImpulse = 0.3f;
+
 	public float attackSpeed = 2.3f;
-	public float hitActiveDuration = 0.05f;
-	public float knockBackDuration = 0.4f;
-	public float swordKnockBackSpeed = 12f;
 
 	public float projectileVelocity = 40f;
-
-	public float crouchingColliderHeight = 0.15f;
 }

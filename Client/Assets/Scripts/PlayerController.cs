@@ -36,19 +36,12 @@ public class PlayerController : MonoBehaviour {
 	public float airJumpSpeed { get{ return CalculateSpeed( airJumpHeight ); } }
 	public float groundJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
 	public float wallJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
-	public float crouchingColliderHeight { get{ return GlobalConfig.instance.crouchingColliderHeight; } }
-	public float projectileThrowingValue { get{ return GlobalConfig.instance.projectileThrowingValue; } }
 
-	public float attackMovementImpulse { get{ return GlobalConfig.instance.attackMovementImpulse; } }
 
 	public float attackSpeed { get{ return GlobalConfig.instance.attackSpeed; } }
-	public float hitActiveDuration { get{ return GlobalConfig.instance.hitActiveDuration; } }
 	public float respawnDelay { get{ return GlobalConfig.instance.respawnDelay; } }
 	public float delayBetweenProjectiles { get{ return GlobalConfig.instance.delayBetweenProjectiles / attackSpeedFactor; } }
 	public int initialHP { get{ return GlobalConfig.instance.initialHP; } }
-
-	public float knockBackDuration { get{ return GlobalConfig.instance.knockBackDuration; } }
-	public float swordKnockBackSpeed { get{ return GlobalConfig.instance.swordKnockBackSpeed; } }
 
 	public float wallJumpHorizontalSpeed { get{ return GlobalConfig.instance.wallJumpHorizontalSpeed; } }
 
