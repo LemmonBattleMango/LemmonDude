@@ -3,8 +3,8 @@ using System.Collections;
 
 public class JoystickController : MonoBehaviour {
 
-	private KeyCode jumpKey = KeyCode.Space;
-	private KeyCode fireKey = KeyCode.LeftAlt;
+	private KeyCode jumpKey = KeyCode.Z;
+	private KeyCode fireKey = KeyCode.X;
 
 	//======================================================
 	public Vector2 GetDirection() {
