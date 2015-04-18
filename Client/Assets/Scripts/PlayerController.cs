@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour {
 
 	public float airJumpSpeed { get{ return CalculateSpeed( airJumpHeight ); } }
 	public float groundJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
-	public float wallJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
+	public float wallJumpVerticalSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
 
 	public float attackDelay { get{ return GlobalConfig.instance.attackDelay; } }
 	public int initialHP { get{ return GlobalConfig.instance.initialHP; } }
@@ -86,6 +86,7 @@ public class PlayerController : MonoBehaviour {
 	public System.Action<PlayerController, PlayerController> onDeath;
 	
 	private bool hasKnockback;
+	Vector2 prevPos;
 	
 	public List <ProjectileSpawnPointInfo> projectileSpawnPointInfos;
 	private Dictionary<ProjectileDirection, Vector2> directionsCache = new Dictionary<ProjectileDirection, Vector2> {
@@ -105,6 +106,7 @@ public class PlayerController : MonoBehaviour {
 	// ====================================================
 	public void Initialize() {
 
+		prevPos = VectorUtils.GetPosition2D( transform.position );
 		nextFireTime = nextProjectileTime = MinigameTimeManager.instance.time;
 
 		joystickController = GetComponent<JoystickController>();
@@ -269,7 +271,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 		else if( isJumpingFromWall ) {
-			float traveledHeight = ( MinigameTimeManager.instance.time - lastJumpFromWallTime ) * wallJumpSpeed;
+			float traveledHeight = ( MinigameTimeManager.instance.time - lastJumpFromWallTime ) * wallJumpVerticalSpeed;
 			bool canKeepJumping = ( traveledHeight < ( maxJumpHeight - minJumpHeight ) );
 			if( canKeepJumping ) {
 				if( jumpButtonHeld ) {
@@ -335,7 +337,7 @@ public class PlayerController : MonoBehaviour {
 			SoundManager.instance.PlaySound( SoundManager.SoundType.Jump );
 			hasPendingJump = false;
 			if( lastJumpableSurface == CollisionType.LEFT_WALL ) {
-				currentSpeed.y = wallJumpSpeed;
+				currentSpeed.y = wallJumpVerticalSpeed;
 				currentSpeed.x = wallJumpHorizontalSpeed;
 				//currentSpeed.x += 0.7f * movementDirection.x * maxHorizontalSpeed;
 				isJumpingFromWall = true;
@@ -343,7 +345,7 @@ public class PlayerController : MonoBehaviour {
 				lastJumpFromWallTime = MinigameTimeManager.instance.time;
 			}
 			else if( lastJumpableSurface == CollisionType.RIGHT_WALL ) {
-				currentSpeed.y = wallJumpSpeed;
+				currentSpeed.y = wallJumpVerticalSpeed;
 				currentSpeed.x = -wallJumpHorizontalSpeed;
 				//currentSpeed.x += 0.7f * movementDirection.x * maxHorizontalSpeed;
 				isJumpingFromWall = true;
@@ -365,15 +367,15 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 		else if( !hasDoubleJumped && jumpButtonDown ) {
-			SoundManager.instance.PlaySound( SoundManager.SoundType.DoubleJump );
-			animator.SetFloat( "isSecondJumping", 1f );
+//			SoundManager.instance.PlaySound( SoundManager.SoundType.DoubleJump );
+//			animator.SetFloat( "isSecondJumping", 1f );
 			hasPendingJump = false;
 			hasDoubleJumped = true;
-			currentSpeed.y = airJumpSpeed;
-			currentSpeed.x += 0.7f * movementDirection.x * maxHorizontalSpeed;
+//			currentSpeed.y = airJumpSpeed;
+//			currentSpeed.x += 0.7f * movementDirection.x * maxHorizontalSpeed;
 		}
 		if( !hasDoubleJumped ) {
-			animator.SetFloat( "isSecondJumping", 0f );
+			//animator.SetFloat( "isSecondJumping", 0f );
 		}
 
 		if( fireButtonDown ) {
@@ -383,13 +385,21 @@ public class PlayerController : MonoBehaviour {
 		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -maxHorizontalSpeed, maxHorizontalSpeed );
 		currentSpeed.y = Mathf.Clamp( currentSpeed.y, -maxVerticalSpeed, float.MaxValue );
 
-		Vector2 prevPos = VectorUtils.GetPosition2D( transform.position );
+		Vector2 prevSpeed = ( VectorUtils.GetPosition2D( transform.position ) - prevPos ) / MinigameTimeManager.instance.deltaTime;
+		prevPos = VectorUtils.GetPosition2D( transform.position );
 		physicsController.Move( currentSpeed * deltaTime, startJumpingDown );
 
 		// updating the current speed
+		Vector2 oldCurrentSpeed = currentSpeed;
 		currentSpeed = ( VectorUtils.GetPosition2D( transform.position ) - prevPos ) / MinigameTimeManager.instance.deltaTime;
 //		currentSpeed.x = ( physicsController.didHitLeft || physicsController.didHitRight ) ? 0 : currentSpeed.x;
 //		currentSpeed.y = ( physicsController.didHitCeiling || physicsController.isGrounded ) ? 0 : currentSpeed.y;
+
+		if( ( physicsController.isGrounded && physicsController.didHitLeft && prevSpeed.x  < 0f )
+		   || ( physicsController.isGrounded && physicsController.didHitRight && prevSpeed.x  > 0f ) ) {
+			float verticalIncrement = Math.Abs( prevSpeed.x );
+			currentSpeed.y += verticalIncrement;
+		}
 
 		if( direction.x != 0 && !isAttacking && !isGrabbingToWall ) {
 			transform.localScale = new Vector3( Mathf.Sign( direction.x ), 1f, 1f );
@@ -437,6 +447,11 @@ public class PlayerController : MonoBehaviour {
 			direction = Vector3.right * Mathf.Sign( transform.localScale.x );
 			projectileDirection = ProjectileDirection.FORWARD;
 		}
+		if( isGrabbingToWall ) {
+			//TODO: check
+			direction = Vector3.right * Mathf.Sign( transform.localScale.x );
+			projectileDirection = ProjectileDirection.FORWARD;
+		}
 		else {
 			float oldHorizontalDir = Mathf.Sign( transform.localScale.x );
 			direction.x *= oldHorizontalDir;
@@ -453,7 +468,6 @@ public class PlayerController : MonoBehaviour {
 			// return to old direction
 			direction.x *= oldHorizontalDir;
 		}
-
 		ProjectileController projectile = Instantiate<ProjectileController>( projectilePrefab );
 		foreach( ProjectileSpawnPointInfo info in projectileSpawnPointInfos ) {
 			if( info.direction == projectileDirection ) {
