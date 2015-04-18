@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerConfig : MonoBehaviour {
+public class GlobalConfig : DisposableSingleton<GlobalConfig> {
 
 	//Player Config
 	public float gravityAccel = 10f;
@@ -32,6 +32,8 @@ public class PlayerConfig : MonoBehaviour {
 	public float hitActiveDuration = 0.05f;
 	public float knockBackDuration = 0.4f;
 	public float swordKnockBackSpeed = 12f;
+
+	public float projectileVelocity = 40f;
 
 	public float crouchingColliderHeight = 0.15f;
 }

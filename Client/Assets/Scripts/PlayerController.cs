@@ -6,42 +6,55 @@ using System.Collections.Generic;
 [RequireComponent (typeof( PhysicsController ) )]
 public class PlayerController : MonoBehaviour {
 
+	public enum ProjectileDirection {
+		UP,
+		DOWN,
+		FORWARD,
+		FORWARD_UP,
+		FORWARD_DOWN
+	}
+
+	[System.Serializable]
+	public struct ProjectileSpawnPointInfo {
+		public ProjectileDirection direction;
+		public Transform spawnPoint;
+	}
+
 	//Player Config
-	public float maxVerticalSpeed { get{ return playerConfig.maxVerticalSpeed * movementSpeedFactor; } }
-	public float maxHorizontalSpeed { get{ return playerConfig.maxHorizontalSpeed * movementSpeedFactor; } }
-	public float walkingAccel { get{ return playerConfig.walkingAccel; } }
-	public float groundFrictionAccel { get{ return playerConfig.groundFrictionAccel; } }
-	public float airFrictionAccel { get{ return playerConfig.airFrictionAccel; } }
-	public float airHorizontalAccel { get{ return playerConfig.airHorizontalAccel; } }
-	public float wallFrictionAcc { get{ return playerConfig.wallFrictionAcc; } }
-	public float wallMaxVeticalSpeed { get{ return playerConfig.wallMaxVeticalSpeed; } }
-	public float airJumpHeight { get{ return playerConfig.airJumpHeight; } }
-	public float maxJumpHeight { get{ return playerConfig.maxJumpHeight; } }
-	public float minJumpHeight { get{ return playerConfig.minJumpHeight; } }
+	public float maxVerticalSpeed { get{ return GlobalConfig.instance.maxVerticalSpeed * movementSpeedFactor; } }
+	public float maxHorizontalSpeed { get{ return GlobalConfig.instance.maxHorizontalSpeed * movementSpeedFactor; } }
+	public float walkingAccel { get{ return GlobalConfig.instance.walkingAccel; } }
+	public float groundFrictionAccel { get{ return GlobalConfig.instance.groundFrictionAccel; } }
+	public float airFrictionAccel { get{ return GlobalConfig.instance.airFrictionAccel; } }
+	public float airHorizontalAccel { get{ return GlobalConfig.instance.airHorizontalAccel; } }
+	public float wallFrictionAcc { get{ return GlobalConfig.instance.wallFrictionAcc; } }
+	public float wallMaxVeticalSpeed { get{ return GlobalConfig.instance.wallMaxVeticalSpeed; } }
+	public float airJumpHeight { get{ return GlobalConfig.instance.airJumpHeight; } }
+	public float maxJumpHeight { get{ return GlobalConfig.instance.maxJumpHeight; } }
+	public float minJumpHeight { get{ return GlobalConfig.instance.minJumpHeight; } }
 
 	public float airJumpSpeed { get{ return CalculateSpeed( airJumpHeight ); } }
 	public float groundJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
 	public float wallJumpSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
-	public float crouchingColliderHeight { get{ return playerConfig.crouchingColliderHeight; } }
-	public float projectileThrowingValue { get{ return playerConfig.projectileThrowingValue; } }
+	public float crouchingColliderHeight { get{ return GlobalConfig.instance.crouchingColliderHeight; } }
+	public float projectileThrowingValue { get{ return GlobalConfig.instance.projectileThrowingValue; } }
 
-	public float attackMovementImpulse { get{ return playerConfig.attackMovementImpulse; } }
+	public float attackMovementImpulse { get{ return GlobalConfig.instance.attackMovementImpulse; } }
 
-	public float attackSpeed { get{ return playerConfig.attackSpeed; } }
-	public float hitActiveDuration { get{ return playerConfig.hitActiveDuration; } }
-	public float respawnDelay { get{ return playerConfig.respawnDelay; } }
-	public float delayBetweenProjectiles { get{ return playerConfig.delayBetweenProjectiles / attackSpeedFactor; } }
-	public int initialHP { get{ return playerConfig.initialHP; } }
+	public float attackSpeed { get{ return GlobalConfig.instance.attackSpeed; } }
+	public float hitActiveDuration { get{ return GlobalConfig.instance.hitActiveDuration; } }
+	public float respawnDelay { get{ return GlobalConfig.instance.respawnDelay; } }
+	public float delayBetweenProjectiles { get{ return GlobalConfig.instance.delayBetweenProjectiles / attackSpeedFactor; } }
+	public int initialHP { get{ return GlobalConfig.instance.initialHP; } }
 
-	public float knockBackDuration { get{ return playerConfig.knockBackDuration; } }
-	public float swordKnockBackSpeed { get{ return playerConfig.swordKnockBackSpeed; } }
+	public float knockBackDuration { get{ return GlobalConfig.instance.knockBackDuration; } }
+	public float swordKnockBackSpeed { get{ return GlobalConfig.instance.swordKnockBackSpeed; } }
 
-	public float wallJumpHorizontalSpeed { get{ return playerConfig.wallJumpHorizontalSpeed; } }
+	public float wallJumpHorizontalSpeed { get{ return GlobalConfig.instance.wallJumpHorizontalSpeed; } }
 
-	public float gravityAccel { get{ return Mathf.Sqrt( movementSpeedFactor ) * playerConfig.gravityAccel; } }
+	public float gravityAccel { get{ return Mathf.Sqrt( movementSpeedFactor ) * GlobalConfig.instance.gravityAccel; } }
 
 	// References
-	private PlayerConfig playerConfig;
 	private JoystickController joystickController;
 	[HideInInspector]
 	public PhysicsController physicsController;
@@ -83,7 +96,16 @@ public class PlayerController : MonoBehaviour {
 	public System.Action<PlayerController, PlayerController> onDeath;
 	
 	private bool hasKnockback;
-	public bool attackAnimationInterrupted;
+	
+	public List <ProjectileSpawnPointInfo> projectileSpawnPointInfos;
+	private Dictionary<ProjectileDirection, Vector2> directionsCache = new Dictionary<ProjectileDirection, Vector2> {
+		{ ProjectileDirection.DOWN, -Vector2.up },
+		{ ProjectileDirection.UP, Vector2.up },
+			{ ProjectileDirection.FORWARD, -Vector2.right },
+				{ ProjectileDirection.FORWARD_DOWN, new Vector2( 1f, -1f ).normalized },
+		{ ProjectileDirection.FORWARD_UP, new Vector2( 1f, 1f ).normalized }
+	};
+	public ProjectileController projectilePrefab;
 
 	// ====================================================
 	private void Start() {
@@ -93,7 +115,6 @@ public class PlayerController : MonoBehaviour {
 	// ====================================================
 	public void Initialize() {
 
-		playerConfig = GetComponent<PlayerConfig>();
 		nextFireTime = nextProjectileTime = MinigameTimeManager.instance.time;
 
 		joystickController = GetComponent<JoystickController>();
@@ -366,7 +387,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if( fireButtonDown ) {
-			StartCoroutine( AttackCoroutine( direction ) );
+			StartCoroutine( FireCoroutine( direction ) );
 		}
 
 		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -maxHorizontalSpeed, maxHorizontalSpeed );
@@ -414,17 +435,46 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// ====================================================
-	private IEnumerator AttackCoroutine( Vector2 direction ) {
+	private IEnumerator FireCoroutine( Vector2 direction ) {
 		if( nextFireTime > MinigameTimeManager.instance.time ) {
 			yield break;
 		}
-
+		nextFireTime = MinigameTimeManager.instance.time + 1/attackSpeed;
 		isAttacking = true;
-		attackAnimationInterrupted = false;
-		bool waitingForAnimationEvent = true;
-		animationListener.cb = () => {
-			waitingForAnimationEvent = false;
-		};
+
+		ProjectileDirection projectileDirection = ProjectileDirection.FORWARD;
+		if( direction == Vector2.zero ) {
+			direction = Vector3.right * Mathf.Sign( transform.localScale.x );
+			projectileDirection = ProjectileDirection.FORWARD;
+		}
+		else {
+			float oldHorizontalDir = Mathf.Sign( transform.localScale.x );
+			direction.x *= oldHorizontalDir;
+			float maxValue = float.MinValue;
+			foreach( ProjectileDirection key in directionsCache.Keys ) {
+				float value = Vector2.Dot( direction, directionsCache[key] );
+				if( value < maxValue ) {
+					continue;
+				}
+				maxValue = value;
+				projectileDirection = key;
+			}
+			direction = directionsCache[projectileDirection];
+			// return to old direction
+			direction.x *= oldHorizontalDir;
+		}
+		ProjectileController projectile = Instantiate<ProjectileController>( projectilePrefab );
+		foreach( ProjectileSpawnPointInfo info in projectileSpawnPointInfos ) {
+			if( info.direction == projectileDirection ) {
+				projectile.transform.position = info.spawnPoint.position;
+				projectile.transform.right = direction;
+			}
+		}
+		projectile.Configure( direction, this );
+//		bool waitingForAnimationEvent = true;
+//		animationListener.cb = () => {
+//			waitingForAnimationEvent = false;
+//		};
 	
 //		HitController hitController = horizontalHitController;
 //		if( direction.magnitude > 0f && Mathf.Abs( direction.x ) <  Mathf.Abs( direction.y ) ){
@@ -454,24 +504,21 @@ public class PlayerController : MonoBehaviour {
 //		}
 
 		//player is still.. using its scale
-		if( direction == Vector2.zero ) {
-			direction = Vector3.right * Mathf.Sign( transform.localScale.x );
-		}
 
-		while( waitingForAnimationEvent && !attackAnimationInterrupted ) {
-			yield return 0;
-		}
 
-		if( attackAnimationInterrupted ) {
-			isAttacking = false;
-			yield break;
-		}
+//		while( waitingForAnimationEvent && !attackAnimationInterrupted ) {
+//			yield return 0;
+//		}
+//
+//		if( attackAnimationInterrupted ) {
+//			isAttacking = false;
+//			yield break;
+//		}
 
-		nextFireTime = MinigameTimeManager.instance.time + 1/attackSpeed;
-		float endTime = MinigameTimeManager.instance.time + hitActiveDuration;
-		while( MinigameTimeManager.instance.time < endTime && !attackAnimationInterrupted ) {
-			yield return 0;
-		}
+//		float endTime = MinigameTimeManager.instance.time + hitActiveDuration;
+//		while( MinigameTimeManager.instance.time < endTime && !attackAnimationInterrupted ) {
+//			yield return 0;
+//		}
 
 		isAttacking = false;
 	}

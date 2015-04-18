@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class MinigameManager : DisposableSingleton<MinigameManager> {
 	
 	public Transform playerContainer;
+	public Transform projectileContainer;
 
 	public delegate void OnRestartRoundDelegate();
 	public event OnRestartRoundDelegate onRestartRound;
@@ -36,7 +37,7 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 #if UNITY_EDITOR
 	//=====================================
 	void Update() {
-		if( Input.GetKeyDown( KeyCode.S ) ) {
+		if( Input.GetKeyDown( KeyCode.L ) ) {
 			ToggleSlowMo();
 		}
 	}

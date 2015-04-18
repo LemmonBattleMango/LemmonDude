@@ -22,6 +22,7 @@ public class MinigameTimeManager : DisposableSingleton<MinigameTimeManager> {
 
 	public float time{ get{ return _time; } }
 	public float deltaTime{ get{ return Time.deltaTime * _timeScale; } }
+	public float fixedDeltaTime{ get{ return Time.fixedDeltaTime * _timeScale; } }
 
 	// Events
 	public event System.Action onTimeScaleChanged;
