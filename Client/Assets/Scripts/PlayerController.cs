@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour {
 	private Dictionary<ProjectileDirection, Vector2> directionsCache = new Dictionary<ProjectileDirection, Vector2> {
 		{ ProjectileDirection.DOWN, -Vector2.up },
 		{ ProjectileDirection.UP, Vector2.up },
-			{ ProjectileDirection.FORWARD, -Vector2.right },
+			{ ProjectileDirection.FORWARD, Vector2.right },
 				{ ProjectileDirection.FORWARD_DOWN, new Vector2( 1f, -1f ).normalized },
 		{ ProjectileDirection.FORWARD_UP, new Vector2( 1f, 1f ).normalized }
 	};
@@ -463,6 +463,7 @@ public class PlayerController : MonoBehaviour {
 			// return to old direction
 			direction.x *= oldHorizontalDir;
 		}
+		Log.Debug( "dir: " + direction);
 		ProjectileController projectile = Instantiate<ProjectileController>( projectilePrefab );
 		foreach( ProjectileSpawnPointInfo info in projectileSpawnPointInfos ) {
 			if( info.direction == projectileDirection ) {

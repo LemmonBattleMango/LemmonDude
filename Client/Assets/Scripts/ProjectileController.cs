@@ -13,8 +13,8 @@ public class ProjectileController : MonoBehaviour {
 	// ====================================================
 	public void Configure( Vector2 _direction, PlayerController _owner ) {
 		direction = _direction.normalized;
-		StartCoroutine( AutoDestroyCoroutine() );
 		owner = _owner;
+		StartCoroutine( AutoDestroyCoroutine() );
 	}
 
 	//======================================================
@@ -40,6 +40,6 @@ public class ProjectileController : MonoBehaviour {
 
 	// ====================================================
 	void FixedUpdate() {
-		transform.Translate( VectorUtils.GetPosition3D( MinigameTimeManager.instance.fixedDeltaTime * direction * GlobalConfig.instance.projectileVelocity ) );
+		transform.position += VectorUtils.GetPosition3D( MinigameTimeManager.instance.fixedDeltaTime * direction * GlobalConfig.instance.projectileVelocity );
 	}
 }
