@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour {
 	public float airFrictionAccel { get{ return GlobalConfig.instance.airFrictionAccel; } }
 	public float airHorizontalAccel { get{ return GlobalConfig.instance.airHorizontalAccel; } }
 	public float wallFrictionAcc { get{ return GlobalConfig.instance.wallFrictionAcc; } }
-	public float wallMaxVeticalSpeed { get{ return GlobalConfig.instance.wallMaxVeticalSpeed; } }
+	public float wallMaxVerticalSpeed { get{ return GlobalConfig.instance.wallMaxVeticalSpeed; } }
 	public float airJumpHeight { get{ return GlobalConfig.instance.airJumpHeight; } }
 	public float maxJumpHeight { get{ return GlobalConfig.instance.maxJumpHeight; } }
 	public float minJumpHeight { get{ return GlobalConfig.instance.minJumpHeight; } }
@@ -539,7 +539,7 @@ public class PlayerController : MonoBehaviour {
 
 		isGrabbingToWall = true;
 		currentSpeed.y -= Mathf.Sign( currentSpeed.y ) * deltaYSpeed;
-		currentSpeed.y = currentSpeed.y < -wallMaxVeticalSpeed ? -wallMaxVeticalSpeed : currentSpeed.y;
+		currentSpeed.y = currentSpeed.y < -wallMaxVerticalSpeed ? -wallMaxVerticalSpeed : currentSpeed.y;
 	}
 
 	// ====================================================
