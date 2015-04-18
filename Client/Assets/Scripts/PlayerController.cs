@@ -569,6 +569,16 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	public void Swap( SwappableEntity swappableEntity ) {
-		//TODO
+		Vector2 previousPos = transform.position;
+		Quaternion previousRotation = transform.rotation;
+		Vector2 previousSpeed = currentSpeed;
+
+		transform.position = VectorUtils.GetPosition3D( swappableEntity.GetPosition() );
+		transform.rotation = swappableEntity.GetRotation();
+		currentSpeed = swappableEntity.GetVelocity();
+
+		swappableEntity.SetPosition( previousPos );
+		swappableEntity.SetRotation( previousRotation );
+		swappableEntity.SetVelocity( previousSpeed );
 	}
 }

@@ -7,7 +7,7 @@ public class SwappableEntity : MonoBehaviour {
 	[HideInInspector]
 	public PhysicsController physicsController;
 	
-	private Vector2 currentSpeed;
+	private Vector2 currentSpeed = Vector2.zero;
 	public float groundFrictionAccel = 5f;
 
 	// ====================================================
@@ -32,6 +32,21 @@ public class SwappableEntity : MonoBehaviour {
 	public Vector2 GetVelocity(){
 		return currentSpeed;
 	}
+
+	//=====================================
+	public void SetPosition( Vector2 pos ){
+		transform.position = VectorUtils.GetPosition3D( pos );
+	}
+	
+	//=====================================
+	public void SetRotation( Quaternion rot ){
+		transform.rotation = rot;
+	}
+	
+	//=====================================
+	public void SetVelocity( Vector2 vel ){
+		currentSpeed = vel;
+	}
 	
 	// ====================================================
 	private void LateUpdate() {
@@ -45,8 +60,8 @@ public class SwappableEntity : MonoBehaviour {
 			ApplyFriction( groundFrictionAccel );
 		}
 
-		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -GlobalConfig.instance.maxHorizontalSpeed, -GlobalConfig.instance.maxHorizontalSpeed );
-		currentSpeed.y = Mathf.Clamp( currentSpeed.y, --GlobalConfig.instance.maxVerticalSpeed, float.MaxValue );
+		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -GlobalConfig.instance.maxHorizontalSpeed, GlobalConfig.instance.maxHorizontalSpeed );
+		currentSpeed.y = Mathf.Clamp( currentSpeed.y, -GlobalConfig.instance.maxVerticalSpeed, float.MaxValue );
 		
 		Vector2 prevPos = VectorUtils.GetPosition2D( transform.position );
 		physicsController.Move( currentSpeed * deltaTime, false );
