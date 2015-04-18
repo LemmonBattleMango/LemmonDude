@@ -463,7 +463,7 @@ public class PlayerController : MonoBehaviour {
 			// return to old direction
 			direction.x *= oldHorizontalDir;
 		}
-		Log.Debug( "dir: " + direction);
+
 		ProjectileController projectile = Instantiate<ProjectileController>( projectilePrefab );
 		foreach( ProjectileSpawnPointInfo info in projectileSpawnPointInfos ) {
 			if( info.direction == projectileDirection ) {
@@ -565,5 +565,10 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		currentSpeed.x -= Mathf.Sign( currentSpeed.x ) * deltaXSpeed;
+	}
+
+	// ====================================================
+	public void Swap( SwappableEntity swappableEntity ) {
+		//TODO
 	}
 }

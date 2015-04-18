@@ -34,6 +34,11 @@ public class ProjectileController : MonoBehaviour {
 			return;
 		}
 
+		SwappableEntity swappableEntity = other.GetComponent<SwappableEntity>();
+		if( swappableEntity != null ) {
+			owner.Swap( swappableEntity );
+		}
+
 		//Do something
 		Destroy( gameObject );
 	}

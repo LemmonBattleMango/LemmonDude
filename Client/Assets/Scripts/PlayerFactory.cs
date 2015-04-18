@@ -36,7 +36,7 @@ public class PlayerFactory : DisposableSingleton<PlayerFactory> {
 		player.name = "Player " + ( playerId + 1 );
 
 		PlayerController playerController = player.GetComponent<PlayerController>();
-		playerController.Initialize();
+		//playerController.Initialize();
 		playerController.onDeath += MinigameManager.instance.OnPlayerDeath;
 		
 		Director.instance.OnPlayerSpawn( playerController );
