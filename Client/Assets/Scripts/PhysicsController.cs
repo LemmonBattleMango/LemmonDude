@@ -231,6 +231,7 @@ public class PhysicsController : MonoBehaviour {
 		offset = originalMovement.y < 0 ? -LINECAST_OFFSET * Vector2.up : Vector2.zero;
 		modifiedMovement = originalMovement + offset;
 		modifiedMovementMagnitude = modifiedMovement.magnitude;
+		modifiedMovementDirection = modifiedMovement.normalized;
 		foreach( Vector2 point in downCollisionPoints ) {
 			worldPoint = point + currentPos2D;
 			raycastHit = Physics2D.Raycast( worldPoint, modifiedMovementDirection, modifiedMovementMagnitude, layerMask.value );
@@ -254,6 +255,7 @@ public class PhysicsController : MonoBehaviour {
 		offset = originalMovement.x > 0 ? LINECAST_OFFSET * Vector2.right : Vector2.zero;
 		modifiedMovement = originalMovement + offset;
 		modifiedMovementMagnitude = modifiedMovement.magnitude;
+		modifiedMovementDirection = modifiedMovement.normalized;
 		foreach( Vector2 point in rightCollisionPoints ) {
 			worldPoint = point + currentPos2D;
 			raycastHit = Physics2D.Raycast( worldPoint, modifiedMovementDirection, modifiedMovementMagnitude, collisionLayerMask.value );
@@ -271,6 +273,7 @@ public class PhysicsController : MonoBehaviour {
 		offset = originalMovement.x < 0 ? -LINECAST_OFFSET * Vector2.right : Vector2.zero;
 		modifiedMovement = originalMovement + offset;
 		modifiedMovementMagnitude = modifiedMovement.magnitude;
+		modifiedMovementDirection = modifiedMovement.normalized;
 		foreach( Vector2 point in leftCollisionPoints ) {
 			worldPoint = point + currentPos2D;
 			raycastHit = Physics2D.Raycast( worldPoint, movementDirection, movementMagnitude + LINECAST_OFFSET, collisionLayerMask.value );

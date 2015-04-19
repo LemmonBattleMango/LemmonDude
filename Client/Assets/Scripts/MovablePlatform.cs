@@ -18,14 +18,14 @@ public class MovablePlatform : MonoBehaviour {
 		lastPosition = myTransform.position;
 		platformPhysicsController = GetComponent<PlatformPhysicsController>();
 		animator = GetComponent<Animator>();
-		animator.enabled = false;
+//		animator.enabled = false;
 		platformPhysicsController.SetCollisionLayers( LayerMask.GetMask( new string[] { "PlayerLayer" } ), LayerMask.GetMask( new string[] { "PlayerLayer" } ) ); 
 	}
 	
 	// ====================================================
-	void Update () {
+	void LateUpdate () {
 
-		animator.Update( MinigameTimeManager.instance.deltaTime );
+		//animator.Update( MinigameTimeManager.instance.deltaTime );
 
 		Vector2 deltaPos = myTransform.position - lastPosition;
 		platformPhysicsController.Move( deltaPos, lastPosition );
@@ -49,7 +49,6 @@ public class MovablePlatform : MonoBehaviour {
 				deltaMovement.x = 0;
 				deltaMovement.y = deltaMovement.y > 0 ? 0 : deltaMovement.y;
 			}
-
 			Vector2 deltaResult = player.physicsController.Move( deltaMovement, false );
 
 			if( collisionInfo.forcedMovementDirection == Vector2.up ) {

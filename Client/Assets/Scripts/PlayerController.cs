@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour {
 		animator = GetComponentInChildren<Animator>();
 
 		physicsController = GetComponent<PhysicsController>();
-		physicsController.shouldUseSlopes = true;
+		physicsController.shouldUseSlopes = false;
 		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer" } ),
 		                                     LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer", "OneWayPlatformLayer" } ) );
 			 
@@ -530,6 +530,7 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	public void Squash() {
+		Log.Debug("squash");
 		Die( null );
 	}
 
