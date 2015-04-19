@@ -7,13 +7,13 @@ public class SwappableEntity : MonoBehaviour {
 	[HideInInspector]
 	public PhysicsController physicsController;
 	
-	private Vector2 currentSpeed = Vector2.zero;
+	protected Vector2 currentSpeed = Vector2.zero;
 	public float groundFrictionAccel = 5f;
 
 	// ====================================================
-	public void Start() {
+	public virtual void Start() {
 		physicsController = GetComponent<PhysicsController>();
-		physicsController.shouldUseSlopes = false;
+		physicsController.shouldUseSlopes = true;
 		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer" } ),
 		                                     LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer", "OneWayPlatformLayer" } ) );
 	}
@@ -49,7 +49,7 @@ public class SwappableEntity : MonoBehaviour {
 	}
 	
 	// ====================================================
-	private void LateUpdate() {
+	protected virtual void LateUpdate() {
 
 		float deltaTime = MinigameTimeManager.instance.deltaTime;
 
@@ -58,6 +58,9 @@ public class SwappableEntity : MonoBehaviour {
 
 		if( physicsController.isGrounded ) {
 			ApplyFriction( groundFrictionAccel );
+		}
+		else {
+			ApplyFriction( GlobalConfig.instance.airFrictionHoizontalAccel );
 		}
 
 		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -GlobalConfig.instance.maxHorizontalSpeed, GlobalConfig.instance.maxHorizontalSpeed );
