@@ -58,8 +58,6 @@ public class PlayerController : MonoBehaviour {
 	public Vector2 currentSpeed;
 	[System.NonSerialized]
 	private float movementSpeedFactor = 1f;
-	[System.NonSerialized]
-	private float attackSpeedFactor = 1f;
 
 	private float nextFireTime;
 	private float nextProjectileTime;
@@ -574,6 +572,8 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	public void Swap( SwappableEntity swappableEntity ) {
+		SoundManager.instance.PlaySound( SoundManager.SoundType.Swap );
+
 		Vector2 previousPos = transform.position;
 		Quaternion previousRotation = transform.rotation;
 		Vector2 previousSpeed = currentSpeed;
