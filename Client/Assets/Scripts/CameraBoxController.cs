@@ -15,7 +15,6 @@ public class CameraBoxController : MonoBehaviour {
 	// References
 	private Camera mainCamera;
 	private List<PlayerController> alivePlayers = new List<PlayerController>();
-	private List<Vector3> visionWards = new List<Vector3>();
 
 	// Status
 	private Vector2 targetPosition;
@@ -38,54 +37,53 @@ public class CameraBoxController : MonoBehaviour {
 	
 	//=====================================
 	public void OnPlayerDead( PlayerController player ) {
-		PlaceVisionWard( player.transform.position, 1.8f );
 		alivePlayers.Remove( player );
 	}
 
 	// ====================================================
 	private void LateUpdate() {
 
-//		MinigameLevelReferences levelRef = MinigameLevelReferences.instance;
-//		Vector3 bottomLeftPos = levelRef.bottomLeftPos;
-//		Vector3 upperRightPos = levelRef.upperRightPos;
-//		UpdateTargetValues( bottomLeftPos, upperRightPos );
-//
-//		float deltaOthographicSize = targetOthographicSize - mainCamera.orthographicSize;
-//		mainCamera.orthographicSize = mainCamera.orthographicSize + deltaOthographicSize * zoomSpeedFactor;
-//
-//		if( mainCamera.orthographicSize * 2f > ( upperRightPos.y - bottomLeftPos.y ) ) {
-//			targetPosition.y = ( upperRightPos.y + bottomLeftPos.y ) * 0.5f;
-//		}
-//		else {
-//			if( ( targetPosition.y + mainCamera.orthographicSize ) > upperRightPos.y ) {
-//				targetPosition.y = upperRightPos.y - mainCamera.orthographicSize;
-//			}
-//			else if( ( targetPosition.y - mainCamera.orthographicSize ) < bottomLeftPos.y ) {
-//				targetPosition.y = bottomLeftPos.y + mainCamera.orthographicSize;
-//			}
-//		}
-//
-//		float orthographicWidth = mainCamera.orthographicSize * mainCamera.aspect;
-//		if( orthographicWidth * 2f > ( upperRightPos.x - bottomLeftPos.x ) ) {
-//			targetPosition.x = ( upperRightPos.x + bottomLeftPos.x ) * 0.5f;
-//		}
-//		else {
-//			if( ( targetPosition.x + orthographicWidth ) > upperRightPos.x ) {
-//				targetPosition.x = upperRightPos.x - orthographicWidth;
-//			}
-//			else if( ( targetPosition.x - orthographicWidth ) < bottomLeftPos.x ) {
-//				targetPosition.x = bottomLeftPos.x + orthographicWidth;
-//			}
-//		}
-//
-//		// TODO: include delta time?
-//		Vector3 deltaPos = VectorUtils.GetPosition3D( targetPosition ) - transform.position;
-//		transform.position = transform.position + movementSpeedFactor * deltaPos;
+		MinigameLevelReferences levelRef = MinigameLevelReferences.instance;
+		Vector3 bottomLeftPos = levelRef.bottomLeftPos;
+		Vector3 upperRightPos = levelRef.upperRightPos;
+		UpdateTargetValues( bottomLeftPos, upperRightPos );
+
+		float deltaOthographicSize = targetOthographicSize - mainCamera.orthographicSize;
+		mainCamera.orthographicSize = mainCamera.orthographicSize + deltaOthographicSize * zoomSpeedFactor;
+
+		if( mainCamera.orthographicSize * 2f > ( upperRightPos.y - bottomLeftPos.y ) ) {
+			targetPosition.y = ( upperRightPos.y + bottomLeftPos.y ) * 0.5f;
+		}
+		else {
+			if( ( targetPosition.y + mainCamera.orthographicSize ) > upperRightPos.y ) {
+				targetPosition.y = upperRightPos.y - mainCamera.orthographicSize;
+			}
+			else if( ( targetPosition.y - mainCamera.orthographicSize ) < bottomLeftPos.y ) {
+				targetPosition.y = bottomLeftPos.y + mainCamera.orthographicSize;
+			}
+		}
+
+		float orthographicWidth = mainCamera.orthographicSize * mainCamera.aspect;
+		if( orthographicWidth * 2f > ( upperRightPos.x - bottomLeftPos.x ) ) {
+			targetPosition.x = ( upperRightPos.x + bottomLeftPos.x ) * 0.5f;
+		}
+		else {
+			if( ( targetPosition.x + orthographicWidth ) > upperRightPos.x ) {
+				targetPosition.x = upperRightPos.x - orthographicWidth;
+			}
+			else if( ( targetPosition.x - orthographicWidth ) < bottomLeftPos.x ) {
+				targetPosition.x = bottomLeftPos.x + orthographicWidth;
+			}
+		}
+
+		// TODO: include delta time?
+		Vector3 deltaPos = VectorUtils.GetPosition3D( targetPosition ) - transform.position;
+		transform.position = transform.position + movementSpeedFactor * deltaPos;
 	}
 
 	//=====================================
 	private void UpdateTargetValues( Vector3 bottomLeftPos, Vector3 upperRightPos ) {
-		int count = alivePlayers.Count + visionWards.Count;
+		int count = alivePlayers.Count;
 		if( count == 0 ) {
 			return;
 		}
@@ -96,7 +94,6 @@ public class CameraBoxController : MonoBehaviour {
 
 		List<Vector3> allPositions = new List<Vector3>();
 		allPositions.AddRange( alivePlayers.ConvertAll( i => i.transform.position ) );
-		allPositions.AddRange( visionWards );
 
 		foreach( Vector3 position in allPositions ) {
 			if( position.x < minX ) {
@@ -142,17 +139,5 @@ public class CameraBoxController : MonoBehaviour {
 			targetOthographicSize = minCameraOthographicSize;
 		}
 		targetPosition = new Vector2( 0.5f * ( minX + maxX ), 0.5f * ( minY + maxY ) );
-	}
-
-	//=====================================
-	public void PlaceVisionWard( Vector3 position, float duration ) {
-		StartCoroutine( PlaceVisionWardCoroutine( position, duration ) );
-	}
-
-	//=====================================
-	private IEnumerator PlaceVisionWardCoroutine( Vector3 position, float duration ) {
-		visionWards.Add( position );
-		yield return StartCoroutine( MinigameTimeManager.instance.WaitForSecs( duration ) );
-		visionWards.Remove( position );
 	}
 }

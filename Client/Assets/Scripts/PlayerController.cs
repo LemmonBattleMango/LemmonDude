@@ -114,6 +114,7 @@ public class PlayerController : MonoBehaviour {
 		MinigameTimeManager.instance.onTimeScaleChanged += OnTimeScaleChangedHandler;
 
 		animator = GetComponentInChildren<Animator>();
+		Director.instance.OnPlayerSpawn( this );
 
 		physicsController = GetComponent<PhysicsController>();
 		physicsController.shouldUseSlopes = false;
