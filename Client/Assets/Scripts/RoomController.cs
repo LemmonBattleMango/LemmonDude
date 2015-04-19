@@ -22,7 +22,7 @@ public class RoomController : MonoBehaviour {
 	}
 
 	//=====================================
-	private void Start() {
+	private void Awake() {
 		if( entrance != null ) {
 			entrance.Configure( this );
 		}

@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour {
 	private bool isJumpingFromWall;
 	private float lastJumpFromWallTime;
 
-	public System.Action<PlayerController, PlayerController> onDeath;
+	public System.Action<PlayerController> onDeath;
 	
 	private bool hasKnockback;
 	Vector2 prevPos;
@@ -156,8 +156,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// ====================================================
-	public void ApplyDamage( int damage, Vector2 knockBackVelocity, PlayerController damageDealer, bool validateDeath ) {
-		Die( null );
+	public void ApplyDamage( int damage, Vector2 knockBackVelocity ) {
+		Die();
 	}
 
 	// ====================================================
@@ -179,7 +179,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// ====================================================
-	void Die( PlayerController damageDealer ) {
+	void Die() {
 		if( isDead ) {
 			return;
 		}
@@ -197,7 +197,7 @@ public class PlayerController : MonoBehaviour {
 		
 		//transform.position = new Vector3( 1000f, 1000f, -1f );
 		if( onDeath != null ) {
-			onDeath( this, damageDealer );
+			onDeath( this );
 		}
 	}
 
@@ -533,8 +533,7 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	public void Squash() {
-		Log.Debug("squash");
-		Die( null );
+		Die();
 	}
 
 	// ====================================================

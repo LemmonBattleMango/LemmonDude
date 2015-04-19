@@ -81,8 +81,16 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 	}
 
 	//=====================================
-	public void OnPlayerDeath( PlayerController deadPlayer, PlayerController killerPlayer ) {
-		//TODO
+	public void OnPlayerDeath( PlayerController deadPlayer ) {
+		StartCoroutine( OnPlayerDeathCoroutine( deadPlayer ) );
+	}
+
+	//=====================================
+	public IEnumerator OnPlayerDeathCoroutine( PlayerController deadPlayer ) {
+		Director.instance.OnPlayerDead( deadPlayer );
+		yield return new WaitForSeconds( 1f );
+		Destroy( deadPlayer.gameObject );
+		ReloadCurrentRoom();
 	}
 
 	//=====================================
@@ -94,5 +102,21 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 		Vector3 deltaPos = currentRoom.transform.position - currentRoom.entrance.transform.position;
 
 		currentRoom.transform.position = lastRoom.exit.transform.position + deltaPos;
+	}
+
+	//=====================================
+	public void ReloadCurrentRoom() {
+		Destroy( currentRoom.gameObject );
+		currentRoom = Instantiate<RoomController>( rooms[roomIndex] );
+		currentRoom.transform.parent = levelContainer;
+
+		if( lastRoom != null ) {
+			Vector3 deltaPos = currentRoom.transform.position - currentRoom.entrance.transform.position;
+			currentRoom.transform.position = lastRoom.exit.transform.position + deltaPos;
+		}
+		else {
+			currentRoom.transform.position = Vector2.zero;
+		}
+		PlayerFactory.instance.CreatePlayer();
 	}
 }

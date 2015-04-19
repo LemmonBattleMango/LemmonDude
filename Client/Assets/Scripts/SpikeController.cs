@@ -32,7 +32,7 @@ public class SpikeController : MonoBehaviour {
 			return;
 		}
 
-		player.ApplyDamage( player.hp, Vector2.zero, null, true );
+		player.ApplyDamage( player.hp, Vector2.zero );
 
 	}
 
