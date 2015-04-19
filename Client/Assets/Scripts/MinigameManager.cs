@@ -6,6 +6,7 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 	
 	public Transform playerContainer;
 	public Transform projectileContainer;
+	public Transform levelContainer;
 
 	public delegate void OnRestartRoundDelegate();
 	public event OnRestartRoundDelegate onRestartRound;
@@ -23,8 +24,29 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 	[System.NonSerialized]
 	public int hitLayer;
 
+	public List<RoomController> rooms;
+	[System.NonSerialized]
+	public RoomController currentRoom;
+	[System.NonSerialized]
+	public RoomController lastRoom;
+	[System.NonSerialized]
+	private int roomIndex;
+
+	//=====================================
+	public void Start() {
+		MinigameStart();
+	}
+
 	//=====================================
 	public void MinigameStart() {
+
+		//Load first room
+		roomIndex = 0;
+		currentRoom = Instantiate<RoomController>( rooms[roomIndex] );
+		currentRoom.transform.parent = levelContainer;
+		currentRoom.transform.position = Vector2.zero;
+		PlayerFactory.instance.CreatePlayer();
+
 		Application.targetFrameRate = 60;
 		levelLayer = LayerMask.NameToLayer( "LevelLayer" );
 		playerLayer = LayerMask.NameToLayer( "PlayerLayer" );
@@ -34,11 +56,17 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 		hitLayer = LayerMask.NameToLayer( "HitDetector" );
 	}
 
-#if UNITY_EDITOR
+
 	//=====================================
 	void Update() {
+		#if UNITY_EDITOR
 		if( Input.GetKeyDown( KeyCode.L ) ) {
 			ToggleSlowMo();
+		}
+		#endif
+
+		if( Input.GetKeyDown( KeyCode.Escape ) ) {
+			Application.Quit();
 		}
 	}
 
@@ -51,25 +79,20 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 			MinigameTimeManager.instance.timeScale = 1f;
 		}
 	}
-#endif
-
-	//=====================================
-	private void RestartRound() {
-		StartCoroutine( RestartRoundCoroutine() );
-	}
-
-	//=====================================
-	private IEnumerator RestartRoundCoroutine() {
-		yield return StartCoroutine( MinigameTimeManager.instance.WaitForSecs( 0.7f ) );
-		if( onRestartRound != null ) {
-			onRestartRound();
-		}
-		foreach( PlayerController p in PlayerFactory.instance.players ) {
-			p.Respawn();
-		}
-	}
 
 	//=====================================
 	public void OnPlayerDeath( PlayerController deadPlayer, PlayerController killerPlayer ) {
+		//TODO
+	}
+
+	//=====================================
+	public void LoadNextRoom() {
+		roomIndex++;
+		lastRoom = currentRoom;
+		currentRoom = Instantiate<RoomController>( rooms[roomIndex] );
+		currentRoom.transform.parent = levelContainer;
+		Vector3 deltaPos = currentRoom.transform.position - currentRoom.entrance.transform.position;
+
+		currentRoom.transform.position = lastRoom.exit.transform.position + deltaPos;
 	}
 }

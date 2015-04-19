@@ -6,42 +6,25 @@ public class PlayerFactory : DisposableSingleton<PlayerFactory> {
 
 	// References
 	public GameObject playerPrefab;
-	public List<PlayerController> players = new List<PlayerController>();
-	private List<Transform> recentlyUsedSpawnPoints = new List<Transform>();
-	public Dictionary<int, int> playerCloneCounter;
+	[System.NonSerialized]
+	public PlayerController currentPlayer;
 
 	// ====================================================
-	public void Initialize( int numPlayers ) {
-		playerCloneCounter = new Dictionary<int, int>();
-		for( int i = 0; i < numPlayers; i++ ) {
-			playerCloneCounter[i] = 0;
-		}
-
-		MinigameLevelReferences levelRef = MinigameLevelReferences.instance;
-
-	}
-
-	// ====================================================
-	public PlayerController CreateEntity( int playerId, bool randomSpawnPoint ) {
+	public PlayerController CreatePlayer() {
 		GameObject player = Instantiate( playerPrefab ) as GameObject;
 		player.transform.parent = MinigameManager.instance.playerContainer.transform;
 
-
-		playerCloneCounter[playerId]++;
-
-		Transform spawnTransform = MinigameLevelReferences.instance.spawnPoint;
+		Transform spawnTransform = MinigameManager.instance.currentRoom.spawnPoint;
 		player.transform.position = spawnTransform.position;
 		player.transform.rotation = spawnTransform.rotation;
 		player.transform.localScale = Vector3.one;
-		player.name = "Player " + ( playerId + 1 );
+		player.name = "Player";
 
 		PlayerController playerController = player.GetComponent<PlayerController>();
 		//playerController.Initialize();
 		playerController.onDeath += MinigameManager.instance.OnPlayerDeath;
-		
-		Director.instance.OnPlayerSpawn( playerController );
 
-		players.Add( playerController );
+		currentPlayer = ( playerController );
 		return playerController;
 	}
 

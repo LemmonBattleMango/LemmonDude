@@ -43,9 +43,9 @@ public class CameraBoxController : MonoBehaviour {
 	// ====================================================
 	private void LateUpdate() {
 
-		MinigameLevelReferences levelRef = MinigameLevelReferences.instance;
-		Vector3 bottomLeftPos = levelRef.bottomLeftPos;
-		Vector3 upperRightPos = levelRef.upperRightPos;
+		RoomController room = MinigameManager.instance.currentRoom;
+		Vector3 bottomLeftPos = room.bottomLeftPos;
+		Vector3 upperRightPos = room.upperRightPos;
 		UpdateTargetValues( bottomLeftPos, upperRightPos );
 
 		float deltaOthographicSize = targetOthographicSize - mainCamera.orthographicSize;
