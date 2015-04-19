@@ -11,11 +11,14 @@ public class PatrollingEnemy : SwappableEntity {
 
 	private float lastDirectionChange;
 
+	protected LayerMask patrolLayerMask;
+
 	// ====================================================
 	public override void Start() {
 		base.Start();
 		myTransform = transform;
 		currentDirection = myTransform.localScale.x > 0 ? Vector2.right : -Vector2.right;
+		patrolLayerMask = LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer" } );
 	}
 	
 	// ====================================================
@@ -41,7 +44,7 @@ public class PatrollingEnemy : SwappableEntity {
 		currentSpeed = ( VectorUtils.GetPosition2D( transform.position ) - prevPos ) / MinigameTimeManager.instance.deltaTime;
 		
 		if( currentSpeed.x != 0 ) {
-			transform.localScale = new Vector3( Mathf.Sign( currentSpeed.x ), 1f, 1f );
+			myTransform.localScale = new Vector3( Mathf.Sign( currentSpeed.x ), 1f, 1f );
 		}
 	}
 
@@ -63,6 +66,15 @@ public class PatrollingEnemy : SwappableEntity {
 			currentSpeed = Vector2.zero;
 			lastDirectionChange = MinigameTimeManager.instance.time;
 			return;
+		}
+		Vector2 offset = physicsController.colliderCenter + ( physicsController.colliderSize.x * 0.5f + PhysicsController.LINECAST_OFFSET )* currentDirection;
+		Vector2 worldPos = VectorUtils.GetPosition2D( myTransform.position ) +  offset;
+		Vector2 direction = ( -2 * PhysicsController.LINECAST_OFFSET - physicsController.colliderSize.y * 0.5f ) * Vector2.up + currentDirection * maxHorizontalSpeed * MinigameTimeManager.instance.deltaTime;
+		RaycastHit2D raycastHit = Physics2D.Raycast( worldPos, direction.normalized, direction.magnitude, patrolLayerMask.value );
+		if( raycastHit.collider == null ) {
+			currentDirection *= -1f;
+			currentSpeed = Vector2.zero;
+			lastDirectionChange = MinigameTimeManager.instance.time;
 		}
 	}
 }

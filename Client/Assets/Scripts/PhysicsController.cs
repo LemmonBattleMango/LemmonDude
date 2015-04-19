@@ -7,12 +7,12 @@ public class PhysicsController : MonoBehaviour {
 
 
 	protected const float TILE_SIZE = 0.10f;	// TODO: move somewhere else
-	protected const float LINECAST_OFFSET = 0.005f;
+	public const float LINECAST_OFFSET = 0.005f;
 
 	// Cache Data
 	protected BoxCollider2D boxCollider;
-	protected Vector2 colliderCenter;
-	protected Vector2 colliderSize;
+	public Vector2 colliderCenter;
+	public Vector2 colliderSize;
 
 	//References
 	protected List<Vector2> upCollisionPoints = new List<Vector2>();
