@@ -7,11 +7,19 @@ public class PatrollingEnemy : SwappableEntity {
 	public float horizontalAccel = 90f;
 
 	public Vector2 currentDirection;
-	private Transform myTransform;
+	protected Transform myTransform;
 
 	private float lastDirectionChange;
 
 	protected LayerMask patrolLayerMask;
+	protected RoomController room;
+
+	protected bool isEnabled{ get{ return MinigameManager.instance.currentRoom == room; } }
+
+	// ====================================================
+	public void Configure( RoomController _room ) {
+		room = _room;
+	}
 
 	// ====================================================
 	public override void Start() {
@@ -23,6 +31,9 @@ public class PatrollingEnemy : SwappableEntity {
 	
 	// ====================================================
 	protected override void LateUpdate() {
+		if( !isEnabled ) {
+			return;
+		}
 		if( physicsController.isGrounded ) {
 			UpdateWalking();
 		}
@@ -32,7 +43,7 @@ public class PatrollingEnemy : SwappableEntity {
 	}
 
 	// ====================================================
-	private void UpdateWalking() {
+	protected virtual void UpdateWalking() {
 		UpdateDirection();
 		currentSpeed += currentDirection * horizontalAccel * MinigameTimeManager.instance.deltaTime;
 		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -maxHorizontalSpeed, maxHorizontalSpeed );

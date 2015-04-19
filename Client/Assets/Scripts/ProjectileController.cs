@@ -27,7 +27,7 @@ public class ProjectileController : MonoBehaviour {
 	}
 
 	//======================================================
-	void OnTriggerEnter2D( Collider2D other ) {	
+	protected virtual void OnTriggerEnter2D( Collider2D other ) {	
 
 		PlayerController entity = other.GetComponent<PlayerController>();
 		if( entity == owner ) {

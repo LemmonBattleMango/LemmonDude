@@ -29,6 +29,10 @@ public class RoomController : MonoBehaviour {
 		if( exit != null ) {
 			exit.Configure( this );
 		}
+		PatrollingEnemy[] enemies = GetComponentsInChildren<PatrollingEnemy>();
+		foreach( PatrollingEnemy enemy in enemies ) {
+			enemy.Configure( this );
+		}
 	}
 	
 	//=====================================
