@@ -34,6 +34,7 @@ public class SoundManager : DisposableSingleton<SoundManager> {
 	//======================================================
 	private void Start() {
 		loopAudioSource.loop = true;
+		loopAudioSource.enabled = false;
 		soundsDictionary = new Dictionary<SoundType, AudioList>();
 		foreach( AudioList audioList in sounds ) {
 			if ( audioList == null ) {
@@ -73,7 +74,7 @@ public class SoundManager : DisposableSingleton<SoundManager> {
 	}
 
 	//======================================================
-	public void LoopSound( SoundType sound ) {
+	public void LoopSound( SoundType sound, bool enabled ) {
 		if( !soundsDictionary.ContainsKey( sound ) ) {
 			Log.Error( "SoundManager.PlaySound: Missing audio list: " + sound.ToString() );
 			return;
@@ -93,6 +94,11 @@ public class SoundManager : DisposableSingleton<SoundManager> {
 			Log.Error( "SoundManager.PlaySound: Missing sound: " + sound.ToString() );
 			return;
 		}
-		loopAudioSource.PlayOneShot( audioToPlay, volume );
+		if( loopAudioSource.enabled == enabled ) {
+			return;
+		}
+		loopAudioSource.volume = audioInfo.volume;
+		loopAudioSource.clip = audioInfo.clip;
+		loopAudioSource.enabled = enabled;
 	}
 }

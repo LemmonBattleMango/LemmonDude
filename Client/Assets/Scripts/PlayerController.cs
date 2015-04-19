@@ -404,12 +404,14 @@ public class PlayerController : MonoBehaviour {
 		}
 		if( physicsController.isGrounded ) {
 			if( Math.Abs( currentSpeed.x ) < 0.1f ) {
+				SoundManager.instance.LoopSound( SoundManager.SoundType.Walk, false );
 				animator.SetBool( "isMoving", false );
 				animator.SetBool( "isJumping", false );
 				animator.SetFloat( "isInAir", 0f );
 				animator.SetBool( "isWallGrabbing", false );
 			}
 			else {
+				SoundManager.instance.LoopSound( SoundManager.SoundType.Walk, true );
 				animator.SetBool( "isMoving", true );
 				animator.SetBool( "isJumping", false );
 				animator.SetFloat( "isInAir", 0f );
@@ -417,6 +419,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 		else {
+			SoundManager.instance.LoopSound( SoundManager.SoundType.Walk, false );
 			if( isGrabbingToWall ) {
 				animator.SetBool( "isMoving", false );
 				animator.SetBool( "isJumping", false );
