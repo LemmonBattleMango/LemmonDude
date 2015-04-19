@@ -64,7 +64,7 @@ public class PlatformPhysicsController : PhysicsController {
 		}
 
 		// check lower collisions
-		offset = originalMovement.y < 0 ? LINECAST_OFFSET * Vector2.up : Vector2.zero;
+		offset = originalMovement.y < 0 ? -LINECAST_OFFSET * Vector2.up : Vector2.zero;
 		modifiedMovement = originalMovement + offset;
 		modifiedMovementMagnitude = modifiedMovement.magnitude;
 		modifiedMovementDirection = modifiedMovement.normalized;
@@ -72,12 +72,12 @@ public class PlatformPhysicsController : PhysicsController {
 
 			worldPoint = point + currentPos2D;
 			raycastHit = Physics2D.Raycast( worldPoint, modifiedMovementDirection, modifiedMovementMagnitude, collisionLayerMask.value );
-			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.up ) ) > epsilon
+			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, -Vector2.up ) ) > epsilon
 			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
 				Vector2 deltaPosCharacter = Vector2.zero;
 				Vector2 ray = ( raycastHit.point - worldPoint );
-				deltaPosCharacter.y = Mathf.Max( deltaPos.y, ray.y );
-				deltaPosCharacter.y = deltaPosCharacter.y < 0f ? 0f : deltaPosCharacter.y;
+				deltaPosCharacter.y = Mathf.Min( deltaPos.y, ray.y );
+				deltaPosCharacter.y = deltaPosCharacter.y > 0f ? 0f : deltaPosCharacter.y;
 				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
 					collider = raycastHit.collider,
 					deltaMovement = deltaPosCharacter,
@@ -85,17 +85,17 @@ public class PlatformPhysicsController : PhysicsController {
 				} );
 			}
 
-			//check down
-			Vector2 worldPoint2 = point + currentPos2D;
-			raycastHit = Physics2D.Raycast( worldPoint2, -Vector2.up, 0.01f, collisionLayerMask.value );
-			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.up ) ) > epsilon
-			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
-				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
-					collider = raycastHit.collider,
-					deltaMovement = deltaPos,
-					forcedMovementDirection =  -Vector2.up
-				} );
-			}
+//			//check down
+//			Vector2 worldPoint2 = point + currentPos2D;
+//			raycastHit = Physics2D.Raycast( worldPoint2, -Vector2.up, 0.01f, collisionLayerMask.value );
+//			if( raycastHit.collider != null && Mathf.Abs( Vector2.Dot( raycastHit.normal, Vector2.up ) ) > epsilon
+//			   && !currentCollisions.ContainsKey( raycastHit.collider ) ) {
+//				currentCollisions.Add( raycastHit.collider, new CollisionInfo{
+//					collider = raycastHit.collider,
+//					deltaMovement = deltaPos,
+//					forcedMovementDirection =  -Vector2.up
+//				} );
+//			}
 		}
 
 		// check right collisions

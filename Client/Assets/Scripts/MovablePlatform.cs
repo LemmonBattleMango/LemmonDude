@@ -46,7 +46,6 @@ public class MovablePlatform : MonoBehaviour {
 			}
 
 			if( collisionInfo.forcedMovementDirection == -Vector2.up ) {
-				deltaMovement.x = 0;
 				deltaMovement.y = deltaMovement.y > 0 ? 0 : deltaMovement.y;
 			}
 			Vector2 deltaResult = player.physicsController.Move( deltaMovement, false );
