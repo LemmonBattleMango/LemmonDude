@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 [RequireComponent (typeof( PlatformPhysicsController ) )]
@@ -53,25 +53,25 @@ public class MovablePlatform : MonoBehaviour {
 			if( collisionInfo.forcedMovementDirection == Vector2.up ) {
 				player.physicsController.isGrounded = true;
 				if( deltaResult.y < deltaMovement.y ) {
-					player.Squash();
+					player.InstaDeath();
 				}
 			}
 			else if( collisionInfo.forcedMovementDirection == -Vector2.up ) {
 				player.physicsController.didHitCeiling = true;
 				if( deltaResult.y > deltaMovement.y ) {
-					player.Squash();
+					player.InstaDeath();
 				}
 			}
 			else if( collisionInfo.forcedMovementDirection == Vector2.right ) {
 				player.physicsController.didHitLeft = true;
 				if( deltaResult.x < deltaMovement.x ) {
-					player.Squash();
+					player.InstaDeath();
 				}
 			}
 			else if( collisionInfo.forcedMovementDirection == -Vector2.right ) {
 				player.physicsController.didHitRight = true;
 				if( deltaResult.x > deltaMovement.x ) {
-					player.Squash();
+					player.InstaDeath();
 				}
 			}
 

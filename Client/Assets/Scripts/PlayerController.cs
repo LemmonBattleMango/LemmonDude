@@ -532,7 +532,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// ====================================================
-	public void Squash() {
+	public void InstaDeath() {
 		Die();
 	}
 
