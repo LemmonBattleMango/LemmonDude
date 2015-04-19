@@ -156,6 +156,7 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	public void ApplyDamage( int damage, Vector2 knockBackVelocity, PlayerController damageDealer, bool validateDeath ) {
+		Die( null );
 	}
 
 	// ====================================================
@@ -181,7 +182,7 @@ public class PlayerController : MonoBehaviour {
 		if( isDead ) {
 			return;
 		}
-
+		Log.Debug( "PlayerController.Die()" );
 		Director.instance.ScreenShake( 0.05f, 0.1f );
 
 		isDead = true;
