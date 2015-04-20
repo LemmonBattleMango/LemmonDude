@@ -7,6 +7,7 @@ public class ProjectileController : MonoBehaviour {
 	public float projectilePushBackForce = 0.15f;
 	public float lifeSpan = 3f;
 
+	public virtual float speed{ get{ return GlobalConfig.instance.projectileVelocity; } }
 
 	private PlayerController owner;
 
@@ -68,6 +69,6 @@ public class ProjectileController : MonoBehaviour {
 
 	// ====================================================
 	void FixedUpdate() {
-		transform.position += VectorUtils.GetPosition3D( MinigameTimeManager.instance.fixedDeltaTime * direction * GlobalConfig.instance.projectileVelocity );
+		transform.position += VectorUtils.GetPosition3D( MinigameTimeManager.instance.fixedDeltaTime * direction * speed );
 	}
 }

@@ -3,6 +3,11 @@ using System.Collections;
 
 public class EnemyBulletController : ProjectileController {
 
+	public override float speed{ get{ return bulletSpeed; } }
+
+	public float bulletSpeed = 20f;
+	
+
 	//======================================================
 	protected override void OnTriggerEnter2D( Collider2D other ) {	
 
