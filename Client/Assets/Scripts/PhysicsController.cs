@@ -36,6 +36,10 @@ public class PhysicsController : MonoBehaviour {
 	public bool didHitACharacterRight = false;
 	[System.NonSerialized]
 	public bool didHitACharacterLeft = false;
+	[System.NonSerialized]
+	public bool didHitACharacterUp = false;
+	[System.NonSerialized]
+	public bool didHitACharacterDown = false;
 
 	protected LayerMask collisionLayerMask;
 	protected LayerMask oneWayCollisionLayerMask;
@@ -207,6 +211,10 @@ public class PhysicsController : MonoBehaviour {
 		float movementMagnitude = deltaPos.magnitude;
 		Vector2 movementDirection = deltaPos.normalized;
 
+		didHitACharacterRight = false;
+		didHitACharacterLeft = false;
+		didHitACharacterUp = false;
+		didHitACharacterDown = false;
 	
 
 		// check upper collisions
@@ -222,6 +230,9 @@ public class PhysicsController : MonoBehaviour {
 				deltaPos.y = Mathf.Min( deltaPos.y, ray.y );
 				didHitCeiling = true;
 				lastColliderHit = raycastHit.collider;
+				if( !didHitACharacterUp ) {
+					didHitACharacterUp = raycastHit.collider.gameObject.layer == characterLayer;
+				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -246,6 +257,9 @@ public class PhysicsController : MonoBehaviour {
 				deltaPos.y =  Mathf.Max( deltaPos.y, ray.y );
 				isGrounded = true;
 				lastColliderHit = raycastHit.collider;
+				if( !didHitACharacterDown ) {
+					didHitACharacterDown = raycastHit.collider.gameObject.layer == characterLayer;
+				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -264,7 +278,9 @@ public class PhysicsController : MonoBehaviour {
 				deltaPos.x = Mathf.Min( deltaPos.x, ray.x );
 				didHitRight = true;
 				lastColliderHit = raycastHit.collider;
-				didHitACharacterRight = raycastHit.collider.gameObject.layer == characterLayer;
+				if( !didHitACharacterRight ) {
+					didHitACharacterRight = raycastHit.collider.gameObject.layer == characterLayer;
+				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -282,7 +298,9 @@ public class PhysicsController : MonoBehaviour {
 				deltaPos.x = Mathf.Max( deltaPos.x, ray.x );
 				didHitLeft = true;
 				lastColliderHit = raycastHit.collider;
-				didHitACharacterLeft = raycastHit.collider.gameObject.layer == characterLayer;
+				if( !didHitACharacterLeft ) {
+					didHitACharacterLeft = raycastHit.collider.gameObject.layer == characterLayer;
+				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}

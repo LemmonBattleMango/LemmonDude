@@ -399,6 +399,10 @@ public class PlayerController : MonoBehaviour {
 				animator.SetBool( "isWallGrabbing", false );
 			}
 		}
+
+		if( physicsController.didHitACharacterDown || physicsController.didHitACharacterUp || physicsController.didHitACharacterRight || physicsController.didHitACharacterLeft ) {
+			InstaDeath();
+		}
 	}
 
 	// ====================================================
