@@ -95,6 +95,9 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 	//=====================================
 	public void LoadNextRoom() {
 		roomIndex++;
+		if( lastRoom != null ) {
+			Destroy( lastRoom.gameObject );
+		}
 		lastRoom = currentRoom;
 		currentRoom = Instantiate<RoomController>( rooms[roomIndex] );
 		currentRoom.transform.parent = levelContainer;
