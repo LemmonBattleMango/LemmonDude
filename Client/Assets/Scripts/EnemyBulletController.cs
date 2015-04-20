@@ -10,6 +10,11 @@ public class EnemyBulletController : ProjectileController {
 		if( player != null ) {
 			player.InstaDeath();
 		}
+
+		PatrollingEnemy enemy = other.GetComponent<PatrollingEnemy>();
+		if( enemy != null ) {
+			enemy.InstaDeath();
+		}
 		
 		//Do something
 		Destroy( gameObject );
