@@ -6,6 +6,7 @@ public class PatrollingEnemy : SwappableEntity {
 	public float maxHorizontalSpeed = 1f;
 	public float horizontalAccel = 90f;
 
+	[HideInInspector]
 	public Vector2 currentDirection;
 	protected Transform myTransform;
 

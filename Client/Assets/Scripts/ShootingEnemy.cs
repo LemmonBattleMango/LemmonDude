@@ -5,9 +5,10 @@ public class ShootingEnemy : PatrollingEnemy {
 
 	public EnemyBulletController bulletPrefab;
 	private bool isAttacking;
-	private float attackDelay = 1f;
+	public float attackDelay = 1f;
 	private float lastTryAttackTime;
 	private float lastAttackTime;
+	public Transform spawnPosition;
 
 	LayerMask layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "PlayerLayer" } );
 
@@ -35,17 +36,15 @@ public class ShootingEnemy : PatrollingEnemy {
 		if( MinigameTimeManager.instance.time < lastTryAttackTime + 0.3f ) {
 			return;
 		}
+
 		lastTryAttackTime = MinigameTimeManager.instance.time;
 		PlayerController player = PlayerFactory.instance.currentPlayer;
 		if( player == null || player.isDead ) {
 			return;
 		}
-
-		Vector2 offset = physicsController.colliderCenter + ( physicsController.colliderSize.x * 0.5f + PhysicsController.LINECAST_OFFSET )* currentDirection;
-		Vector2 worldPos = VectorUtils.GetPosition2D( myTransform.position ) +  offset;
-		
-		RaycastHit2D raycastHit = Physics2D.Raycast( worldPos, myTransform.right, (worldPos - VectorUtils.GetPosition2D( player.transform.position ) ).magnitude, layerMask.value );
-		if( raycastHit.collider != null && player.gameObject == raycastHit.collider ) {
+		Vector2 direction = Vector2.right * myTransform.localScale.x;
+		RaycastHit2D raycastHit = Physics2D.Raycast( spawnPosition.position, direction, VectorUtils.GetPosition2D( player.transform.position - spawnPosition.position ).magnitude, layerMask.value );
+		if( raycastHit.collider != null && player.gameObject == raycastHit.collider.gameObject ) {
 			StartCoroutine( AttackCoroutine() );
 		}
 	}
@@ -55,11 +54,13 @@ public class ShootingEnemy : PatrollingEnemy {
 		isAttacking = true;
 		lastAttackTime = MinigameTimeManager.instance.time;
 		float startTime = MinigameTimeManager.instance.time;
+		EnemyBulletController bullet = Instantiate<EnemyBulletController>( bulletPrefab );
+		Vector2 direction = Vector2.right * myTransform.localScale.x;
+		bullet.Configure( direction, null );
+		bullet.transform.position = spawnPosition.position;
 		while( MinigameTimeManager.instance.time < lastTryAttackTime + 0.3f ) {
 			yield return 0;
 		}
-		EnemyBulletController bullet = Instantiate<EnemyBulletController>( bulletPrefab );
-		bullet.Configure( myTransform.right, null );
 		isAttacking = false;
 	}
 
