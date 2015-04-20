@@ -30,7 +30,8 @@ public class ProjectileController : MonoBehaviour {
 	protected virtual void OnTriggerEnter2D( Collider2D other ) {	
 
 		PlayerController player = other.GetComponent<PlayerController>();
-		if( player == owner || player.isDead ) {
+		if( player == owner ) {
+			Destroy( gameObject );
 			return;
 		}
 
