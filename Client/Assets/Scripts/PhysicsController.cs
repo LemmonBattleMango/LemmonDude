@@ -40,6 +40,8 @@ public class PhysicsController : MonoBehaviour {
 	public bool didHitACharacterUp = false;
 	[System.NonSerialized]
 	public bool didHitACharacterDown = false;
+	[System.NonSerialized]
+	public bool didHitPlayer = false;
 
 	protected LayerMask collisionLayerMask;
 	protected LayerMask oneWayCollisionLayerMask;
@@ -211,6 +213,7 @@ public class PhysicsController : MonoBehaviour {
 		float movementMagnitude = deltaPos.magnitude;
 		Vector2 movementDirection = deltaPos.normalized;
 
+		didHitPlayer = false;
 		didHitACharacterRight = false;
 		didHitACharacterLeft = false;
 		didHitACharacterUp = false;
@@ -232,6 +235,9 @@ public class PhysicsController : MonoBehaviour {
 				lastColliderHit = raycastHit.collider;
 				if( !didHitACharacterUp ) {
 					didHitACharacterUp = raycastHit.collider.gameObject.layer == characterLayer;
+				}
+				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
+					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
 				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
@@ -260,6 +266,9 @@ public class PhysicsController : MonoBehaviour {
 				if( !didHitACharacterDown ) {
 					didHitACharacterDown = raycastHit.collider.gameObject.layer == characterLayer;
 				}
+				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
+					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
+				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -281,6 +290,9 @@ public class PhysicsController : MonoBehaviour {
 				if( !didHitACharacterRight ) {
 					didHitACharacterRight = raycastHit.collider.gameObject.layer == characterLayer;
 				}
+				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
+					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
+				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -300,6 +312,9 @@ public class PhysicsController : MonoBehaviour {
 				lastColliderHit = raycastHit.collider;
 				if( !didHitACharacterLeft ) {
 					didHitACharacterLeft = raycastHit.collider.gameObject.layer == characterLayer;
+				}
+				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
+					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
 				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );

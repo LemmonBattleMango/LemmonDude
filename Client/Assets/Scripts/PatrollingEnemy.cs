@@ -46,6 +46,9 @@ public class PatrollingEnemy : SwappableEntity {
 		else{ 
 			base.LateUpdate();
 		}
+		if( physicsController.didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
+			PlayerFactory.instance.currentPlayer.InstaDeath();
+		}
 	}
 
 	// ====================================================
