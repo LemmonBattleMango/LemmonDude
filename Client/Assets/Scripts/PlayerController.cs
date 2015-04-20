@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour {
 		{ ProjectileDirection.FORWARD_UP, new Vector2( 1f, 1f ).normalized }
 	};
 	public ProjectileController projectilePrefab;
+	public ProjectileController currentProjectile;
 
 	// ====================================================
 	private void Start() {
@@ -407,6 +408,9 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	private IEnumerator FireCoroutine( Vector2 direction ) {
+		if( currentProjectile != null ) {
+			yield break;
+		}
 		if( nextFireTime > MinigameTimeManager.instance.time ) {
 			yield break;
 		}
@@ -439,63 +443,14 @@ public class PlayerController : MonoBehaviour {
 			// return to old direction
 			direction.x *= oldHorizontalDir;
 		}
-		ProjectileController projectile = Instantiate<ProjectileController>( projectilePrefab );
+		currentProjectile = Instantiate<ProjectileController>( projectilePrefab );
 		foreach( ProjectileSpawnPointInfo info in projectileSpawnPointInfos ) {
 			if( info.direction == projectileDirection ) {
-				projectile.transform.position = info.spawnPoint.position;
-				projectile.transform.right = direction;
+				currentProjectile.transform.position = info.spawnPoint.position;
+				currentProjectile.transform.right = direction;
 			}
 		}
-		projectile.Configure( direction, this );
-//		bool waitingForAnimationEvent = true;
-//		animationListener.cb = () => {
-//			waitingForAnimationEvent = false;
-//		};
-	
-//		HitController hitController = horizontalHitController;
-//		if( direction.magnitude > 0f && Mathf.Abs( direction.x ) <  Mathf.Abs( direction.y ) ){
-//			if( direction.y > 0 ) {
-//				hitController = upHitController;
-//				animator.SetTrigger( "attackUp" );
-//				SoundManager.instance.PlaySound( SoundManager.SoundType.Swing );
-//			}
-//			else {
-//				//regular down attack:
-//				if( physicsController.isGrounded ) {
-//					hitController = downHitController;
-//					animator.SetTrigger( "attackDown" );
-//					SoundManager.instance.PlaySound( SoundManager.SoundType.Swing );
-//				}
-//				// down link attack
-//				else {
-//					StartCoroutine( LinkDown( direction ) );
-//					SoundManager.instance.PlaySound( SoundManager.SoundType.LinkDown);
-//					yield break;
-//				}
-//			}
-//		}
-//		else {
-//			SoundManager.instance.PlaySound( SoundManager.SoundType.Swing );
-//			animator.SetTrigger( "attackFront" );
-//		}
-
-		//player is still.. using its scale
-
-
-//		while( waitingForAnimationEvent && !attackAnimationInterrupted ) {
-//			yield return 0;
-//		}
-//
-//		if( attackAnimationInterrupted ) {
-//			isAttacking = false;
-//			yield break;
-//		}
-
-//		float endTime = MinigameTimeManager.instance.time + hitActiveDuration;
-//		while( MinigameTimeManager.instance.time < endTime && !attackAnimationInterrupted ) {
-//			yield return 0;
-//		}
-
+		currentProjectile.Configure( direction, this );
 		isAttacking = false;
 	}
 
