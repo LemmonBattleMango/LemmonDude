@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c08065e3eeba8cd45b913abb1783ce4c
-timeCreated: 1429545314
+timeCreated: 1429557630
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -43,6 +43,16 @@ TextureImporter:
     21300072: ninja_animations_37
     21300074: ninja_animations_38
     21300076: ninja_animations_39
+    21300078: ninja_animations_40
+    21300080: ninja_animations_41
+    21300082: ninja_animations_42
+    21300084: ninja_animations_43
+    21300086: ninja_animations_44
+    21300088: ninja_animations_45
+    21300090: ninja_animations_46
+    21300092: ninja_animations_47
+    21300094: ninja_animations_48
+    21300096: ninja_animations_49
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -312,16 +322,6 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ninja_animations_23
-      rect:
-        serializedVersion: 2
-        x: 350
-        y: 450
-        width: 50
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
     - name: ninja_animations_24
       rect:
         serializedVersion: 2
@@ -462,21 +462,111 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ninja_animations_38
+    - name: ninja_animations_39
       rect:
         serializedVersion: 2
-        x: 300
-        y: 350
+        x: 0
+        y: 300
         width: 50
         height: 50
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: ninja_animations_39
+    - name: ninja_animations_40
       rect:
         serializedVersion: 2
-        x: 350
-        y: 350
+        x: 50
+        y: 300
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_41
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 300
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_42
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 300
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_43
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 300
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_44
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 300
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 250
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_46
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 250
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_47
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 250
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_48
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 250
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: ninja_animations_49
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 250
         width: 50
         height: 50
       alignment: 0
