@@ -369,12 +369,6 @@ public class PlayerController : MonoBehaviour {
 //		currentSpeed.x = ( physicsController.didHitLeft || physicsController.didHitRight ) ? 0 : currentSpeed.x;
 //		currentSpeed.y = ( physicsController.didHitCeiling || physicsController.isGrounded ) ? 0 : currentSpeed.y;
 
-		if( ( physicsController.isGrounded && physicsController.didHitLeft && prevSpeed.x  < 0f )
-		   || ( physicsController.isGrounded && physicsController.didHitRight && prevSpeed.x  > 0f ) ) {
-			float verticalIncrement = Math.Abs( prevSpeed.x );
-			currentSpeed.y += verticalIncrement;
-		}
-
 		if( direction.x != 0 && !isAttacking && !isGrabbingToWall ) {
 			transform.localScale = new Vector3( Mathf.Sign( direction.x ), 1f, 1f );
 		}
