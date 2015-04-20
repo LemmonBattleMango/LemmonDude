@@ -10,7 +10,11 @@ public class SoundManager : DisposableSingleton<SoundManager> {
 		Jump,
 		Swap,
 		Stomp,
-		Death
+		Death,
+		NoSwap,
+		EnemyDeath,
+		Spikes,
+		Throw
 
 		// ADD SOUNDS AT HERE ↑↑↑↑
 	}

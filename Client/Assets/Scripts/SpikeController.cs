@@ -29,7 +29,8 @@ public class SpikeController : MonoBehaviour {
 			if( Vector2.Dot( direction, player.currentSpeed - currentSpeed ) >= -0.1f ) {
 				return;
 			}
-			
+
+			SoundManager.instance.PlaySound( SoundManager.SoundType.Spikes );
 			player.InstaDeath();
 			return;
 		}
@@ -41,7 +42,8 @@ public class SpikeController : MonoBehaviour {
 			if( Vector2.Dot( direction, enemy.currentSpeed - currentSpeed ) >= -0.1f ) {
 				return;
 			}
-			
+
+			SoundManager.instance.PlaySound( SoundManager.SoundType.Spikes );
 			enemy.InstaDeath();
 			return;
 		}

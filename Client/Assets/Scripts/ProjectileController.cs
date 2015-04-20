@@ -58,6 +58,9 @@ public class ProjectileController : MonoBehaviour {
 		if( swappableEntity != null ) {
 			owner.Swap( swappableEntity );
 		}
+		else {
+			SoundManager.instance.PlaySound( SoundManager.SoundType.NoSwap );
+		}
 
 		//Do something
 		Destroy( gameObject );

@@ -443,6 +443,7 @@ public class PlayerController : MonoBehaviour {
 			// return to old direction
 			direction.x *= oldHorizontalDir;
 		}
+		SoundManager.instance.PlaySound( SoundManager.SoundType.Throw );
 		currentProjectile = Instantiate<ProjectileController>( projectilePrefab );
 		foreach( ProjectileSpawnPointInfo info in projectileSpawnPointInfos ) {
 			if( info.direction == projectileDirection ) {

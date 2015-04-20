@@ -72,6 +72,7 @@ public class PatrollingEnemy : SwappableEntity {
 
 	// ====================================================
 	public void InstaDeath() {
+		SoundManager.instance.PlaySound( SoundManager.SoundType.EnemyDeath );
 		Destroy( gameObject );
 	}
 
