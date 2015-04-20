@@ -20,6 +20,8 @@ public class ProjectileController : MonoBehaviour {
 
 	//======================================================
 	public IEnumerator AutoDestroyCoroutine() {
+		//wait for one frame to be on screen
+		yield return null;
 		float initialTime = MinigameTimeManager.instance.time;
 		while( MinigameTimeManager.instance.time < initialTime + lifeSpan && IsOnScreen() ) {
 			yield return null;
