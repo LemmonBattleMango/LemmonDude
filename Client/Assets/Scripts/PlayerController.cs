@@ -92,8 +92,8 @@ public class PlayerController : MonoBehaviour {
 		//{ ProjectileDirection.DOWN, -Vector2.up },
 		//{ ProjectileDirection.UP, Vector2.up },
 		{ ProjectileDirection.FORWARD, Vector2.right },
-		{ ProjectileDirection.FORWARD_DOWN, new Vector2( 1f, -1f ).normalized },
-		{ ProjectileDirection.FORWARD_UP, new Vector2( 1f, 1f ).normalized }
+		//{ ProjectileDirection.FORWARD_DOWN, new Vector2( 1f, -1f ).normalized },
+		//{ ProjectileDirection.FORWARD_UP, new Vector2( 1f, 1f ).normalized }
 	};
 	public ProjectileController projectilePrefab;
 	public ProjectileController currentProjectile;
