@@ -137,25 +137,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// ====================================================
-	public void Respawn() {
-		isDead = false;
-
-		transform.GetComponent<Rigidbody2D>().GetComponent<Collider2D>().enabled = true;
-		transform.position = MinigameLevelReferences.instance.spawnPoint.position;
-		hp = initialHP;
-		currentSpeed = Vector2.zero;
-		nextProjectileTime = 0;
-		nextFireTime = 0;
-		physicsController.SetCollisionLayers( LayerMask.GetMask( new string[] { "LevelLayer", "PlayerLayer" } ),
-		                                     LayerMask.GetMask( new string[] { "LevelLayer", "PlayerLayer", "OneWayPlatformLayer" } ) );
-
-	
-		animator.SetBool( "isDeath", false );
-		gameObject.layer = MinigameManager.instance.playerLayer;
-		Director.instance.OnPlayerSpawn( this );
-	}
-
-	// ====================================================
 	public void ApplyDamage( int damage, Vector2 knockBackVelocity ) {
 		Die();
 	}
@@ -199,13 +180,6 @@ public class PlayerController : MonoBehaviour {
 		if( onDeath != null ) {
 			onDeath( this );
 		}
-	}
-
-	// ====================================================
-	private IEnumerator DieCoroutine( PlayerController damageDealer ) {
-		//revive after X seconds
-		yield return new WaitForSeconds( 3f );
-		Respawn();
 	}
 	
 	// ====================================================

@@ -66,7 +66,7 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 		#endif
 
 		if( Input.GetKeyDown( KeyCode.Escape ) ) {
-			Application.Quit();
+			Application.LoadLevel( "MainMenuScene" );
 		}
 	}
 
