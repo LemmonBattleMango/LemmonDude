@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: b34c8bf4a23913d4281b38773b1f040f
 timeCreated: 1429488047
+=======
+guid: 92c1349f3b523e5408e8ace26b7b620f
+timeCreated: 1429490872
+>>>>>>> Added spikes and other adjustments to Rooms
 licenseType: Free
 AudioImporter:
   serializedVersion: 6
