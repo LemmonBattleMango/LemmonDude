@@ -12,13 +12,15 @@ public class RoomExit : MonoBehaviour {
 	
 	//======================================================
 	void OnTriggerEnter2D( Collider2D other ) {	
-		if( other.GetComponent<PlayerController>() == null ) {
+		PlayerController player = other.GetComponent<PlayerController>();
+		if( player == null || player.isDead ) {
 			return;
 		}
 		if( MinigameManager.instance.currentRoom != targetRoom ) {
 			return;
 		}
-		
+
+		player.joystickController.ForceDirection( Vector2.right, 0.15f );
 		MinigameManager.instance.LoadNextRoom();
 	}
 }

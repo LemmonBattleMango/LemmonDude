@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour {
 	public float gravityAccel { get{ return Mathf.Sqrt( movementSpeedFactor ) * GlobalConfig.instance.gravityAccel; } }
 
 	// References
-	private JoystickController joystickController;
+	[NonSerialized]
+	public JoystickController joystickController;
 	[HideInInspector]
 	public PhysicsController physicsController;
 	private Animator animator;
