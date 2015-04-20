@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour {
 	public PhysicsController physicsController;
 	private Animator animator;
 	private AnimationListener animationListener;
+	public ParticleSystem runningParticles;
 
 	// Status
 	[System.NonSerialized]
@@ -96,6 +97,7 @@ public class PlayerController : MonoBehaviour {
 		//{ ProjectileDirection.FORWARD_UP, new Vector2( 1f, 1f ).normalized }
 	};
 	public ProjectileController projectilePrefab;
+	[NonSerialized]
 	public ProjectileController currentProjectile;
 
 	// ====================================================
@@ -368,9 +370,18 @@ public class PlayerController : MonoBehaviour {
 
 		if( direction.x != 0 && !isAttacking && !isGrabbingToWall ) {
 			transform.localScale = new Vector3( Mathf.Sign( direction.x ), 1f, 1f );
+			if( transform.localScale.x < 0 ) {
+				runningParticles.transform.localScale = new Vector3( 1f, -1f, 1f );
+				runningParticles.transform.rotation = Quaternion.Euler( 0f, 90f, 0f );
+			}
+			else {
+				runningParticles.transform.localScale = new Vector3( 1f, 1f, 1f );
+				runningParticles.transform.rotation = Quaternion.Euler( 0f, 270f, 0f );
+			}
 		}
 		if( physicsController.isGrounded ) {
 			if( Math.Abs( currentSpeed.x ) < 0.1f ) {
+				runningParticles.enableEmission = false;
 				SoundManager.instance.LoopSound( SoundManager.SoundType.Walk, false );
 				animator.SetBool( "isMoving", false );
 				animator.SetBool( "isJumping", false );
@@ -379,6 +390,7 @@ public class PlayerController : MonoBehaviour {
 			}
 			else {
 				SoundManager.instance.LoopSound( SoundManager.SoundType.Walk, true );
+				runningParticles.enableEmission = true;
 				animator.SetBool( "isMoving", true );
 				animator.SetBool( "isJumping", false );
 				animator.SetFloat( "isInAir", 0f );
@@ -387,6 +399,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		else {
 			SoundManager.instance.LoopSound( SoundManager.SoundType.Walk, false );
+			runningParticles.enableEmission = false;
 			if( isGrabbingToWall ) {
 				animator.SetBool( "isMoving", false );
 				animator.SetBool( "isJumping", false );
