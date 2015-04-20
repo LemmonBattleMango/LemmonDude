@@ -31,47 +31,50 @@ public class MovablePlatform : MonoBehaviour {
 		platformPhysicsController.Move( deltaPos, lastPosition );
 
 		foreach( CollisionInfo collisionInfo in platformPhysicsController.currentCollisions.Values ) {
-			PlayerController player = collisionInfo.collider.GetComponent<PlayerController>();
-			if( player == null ) {
+			PhysicsController other = collisionInfo.collider.GetComponent<PhysicsController>();
+			if( other == null || other is PlatformPhysicsController ) {
 				continue;
 			}
 			Vector2 deltaMovement = collisionInfo.deltaMovement;
 
-			if( collisionInfo.forcedMovementDirection == Vector2.right && !player.isGrabbingToWall ) {
-				deltaMovement.y = 0;
-			}
+			PlayerController player = other.GetComponent<PlayerController>();
+			if( player != null ) {
+				if( collisionInfo.forcedMovementDirection == Vector2.right && !player.isGrabbingToWall ) {
+					deltaMovement.y = 0;
+				}
 
-			if( collisionInfo.forcedMovementDirection == -Vector2.right && !player.isGrabbingToWall ) {
-				deltaMovement.y = 0;
+				if( collisionInfo.forcedMovementDirection == -Vector2.right && !player.isGrabbingToWall ) {
+					deltaMovement.y = 0;
+				}
 			}
 
 			if( collisionInfo.forcedMovementDirection == -Vector2.up ) {
 				deltaMovement.y = deltaMovement.y > 0 ? 0 : deltaMovement.y;
 			}
-			Vector2 deltaResult = player.physicsController.Move( deltaMovement, false );
+			Vector2 deltaResult = other.Move( deltaMovement, false );
 
 			if( collisionInfo.forcedMovementDirection == Vector2.up ) {
-				player.physicsController.isGrounded = true;
+				other.isGrounded = true;
 				if( deltaResult.y < deltaMovement.y ) {
-					player.InstaDeath();
+					Squash( other );
 				}
 			}
 			else if( collisionInfo.forcedMovementDirection == -Vector2.up ) {
-				player.physicsController.didHitCeiling = true;
+				other.didHitCeiling = true;
 				if( deltaResult.y > deltaMovement.y ) {
-					player.InstaDeath();
+					Squash( other );
 				}
 			}
 			else if( collisionInfo.forcedMovementDirection == Vector2.right ) {
-				player.physicsController.didHitLeft = true;
+				other.didHitLeft = true;
 				if( deltaResult.x < deltaMovement.x ) {
-					player.InstaDeath();
+					Squash( other );
 				}
 			}
 			else if( collisionInfo.forcedMovementDirection == -Vector2.right ) {
-				player.physicsController.didHitRight = true;
+				other.didHitRight = true;
 				if( deltaResult.x > deltaMovement.x ) {
-					player.InstaDeath();
+					Squash( other );
 				}
 			}
 
@@ -79,5 +82,20 @@ public class MovablePlatform : MonoBehaviour {
 
 
 		lastPosition = myTransform.position;
+	}
+
+	// ====================================================
+	void Squash( PhysicsController other ) {
+		PlayerController player = other.GetComponent<PlayerController>();
+		if( player != null ) {
+			player.InstaDeath();
+			return;
+		}
+		PatrollingEnemy patroller = other.GetComponent<PatrollingEnemy>();
+		if( patroller != null ) {
+			patroller.InstaDeath();
+			return;
+		}
+		Destroy( other.gameObject );
 	}
 }

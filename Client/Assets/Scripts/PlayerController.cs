@@ -137,11 +137,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// ====================================================
-	public void ApplyDamage( int damage, Vector2 knockBackVelocity ) {
-		Die();
-	}
-
-	// ====================================================
 	public void ApplyKnockBack( Vector2 knockbackVelocity, float duration ) {
 		StartCoroutine( ApplyKnockBackCoroutine( knockbackVelocity, duration ) );
 	}
@@ -557,5 +552,10 @@ public class PlayerController : MonoBehaviour {
 		swappableEntity.SetPosition( previousPos );
 		swappableEntity.SetRotation( previousRotation );
 		swappableEntity.SetVelocity( previousSpeed );
+
+		PatrollingEnemy patroller = swappableEntity as PatrollingEnemy;
+		if( patroller != null ) {
+			patroller.SetDirectionAsForward();
+		}
 	}
 }

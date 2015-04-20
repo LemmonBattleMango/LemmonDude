@@ -26,8 +26,13 @@ public class PatrollingEnemy : SwappableEntity {
 	public override void Start() {
 		base.Start();
 		myTransform = transform;
-		currentDirection = myTransform.localScale.x > 0 ? Vector2.right : -Vector2.right;
+		SetDirectionAsForward();
 		patrolLayerMask = LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer" } );
+	}
+
+	// ====================================================
+	public void SetDirectionAsForward() {
+		currentDirection = myTransform.localScale.x > 0 ? Vector2.right : -Vector2.right;
 	}
 	
 	// ====================================================

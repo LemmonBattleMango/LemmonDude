@@ -9,7 +9,6 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 	public Transform levelContainer;
 
 	public delegate void OnRestartRoundDelegate();
-	public event OnRestartRoundDelegate onRestartRound;
 
 	[System.NonSerialized]
 	public int levelLayer;

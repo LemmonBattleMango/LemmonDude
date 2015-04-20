@@ -24,15 +24,27 @@ public class SpikeController : MonoBehaviour {
 	// =====================================
 	private void OnTriggerEnter2D( Collider2D other ) {
 		PlayerController player = other.GetComponent<PlayerController>();
-		if( player == null ) {
-			return;
-		}
-		Vector2 direction = transform.TransformDirection( localSpikeDirection ).normalized;
-		if( Vector2.Dot( direction, player.currentSpeed - currentSpeed ) >= -0.1f ) {
+		if( player != null ) {
+			Vector2 direction = transform.TransformDirection( localSpikeDirection ).normalized;
+			if( Vector2.Dot( direction, player.currentSpeed - currentSpeed ) >= -0.1f ) {
+				return;
+			}
+			
+			player.InstaDeath();
 			return;
 		}
 
-		player.ApplyDamage( player.hp, Vector2.zero );
+
+		PatrollingEnemy enemy = other.GetComponent<PatrollingEnemy>();
+		if( enemy != null ) {
+			Vector2 direction = transform.TransformDirection( localSpikeDirection ).normalized;
+			if( Vector2.Dot( direction, enemy.currentSpeed - currentSpeed ) >= -0.1f ) {
+				return;
+			}
+			
+			enemy.InstaDeath();
+			return;
+		}
 
 	}
 

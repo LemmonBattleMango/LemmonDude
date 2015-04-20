@@ -6,8 +6,9 @@ public class SwappableEntity : MonoBehaviour {
 
 	[HideInInspector]
 	public PhysicsController physicsController;
-	
-	protected Vector2 currentSpeed = Vector2.zero;
+
+	[HideInInspector]
+	public Vector2 currentSpeed = Vector2.zero;
 	public float groundFrictionAccel = 5f;
 
 	// ====================================================
