@@ -6,6 +6,8 @@ public class PatrollingEnemy : SwappableEntity {
 	public float maxHorizontalSpeed = 1f;
 	public float horizontalAccel = 90f;
 
+	protected virtual float horizontalSpeed{ get{ return maxHorizontalSpeed; } }
+
 	[HideInInspector]
 	public Vector2 currentDirection;
 	protected Transform myTransform;
@@ -55,7 +57,7 @@ public class PatrollingEnemy : SwappableEntity {
 	protected virtual void UpdateWalking() {
 		UpdateDirection();
 		currentSpeed += currentDirection * horizontalAccel * MinigameTimeManager.instance.deltaTime;
-		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -maxHorizontalSpeed, maxHorizontalSpeed );
+		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -horizontalSpeed, horizontalSpeed );
 
 		Vector2 prevPos = VectorUtils.GetPosition2D( transform.position );
 		physicsController.Move( currentSpeed * MinigameTimeManager.instance.deltaTime, false );
@@ -94,7 +96,7 @@ public class PatrollingEnemy : SwappableEntity {
 		}
 		Vector2 offset = physicsController.colliderCenter + ( physicsController.colliderSize.x * 0.5f + PhysicsController.LINECAST_OFFSET )* currentDirection;
 		Vector2 worldPos = VectorUtils.GetPosition2D( myTransform.position ) +  offset;
-		Vector2 direction = ( -2 * PhysicsController.LINECAST_OFFSET - physicsController.colliderSize.y * 0.5f ) * Vector2.up + currentDirection * maxHorizontalSpeed * MinigameTimeManager.instance.deltaTime;
+		Vector2 direction = ( -2 * PhysicsController.LINECAST_OFFSET - physicsController.colliderSize.y * 0.5f ) * Vector2.up + currentDirection * horizontalSpeed * MinigameTimeManager.instance.deltaTime;
 		RaycastHit2D raycastHit = Physics2D.Raycast( worldPos, direction.normalized, direction.magnitude, patrolLayerMask.value );
 		if( raycastHit.collider == null ) {
 			currentDirection *= -1f;
