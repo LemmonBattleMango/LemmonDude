@@ -5,12 +5,12 @@ public class ChasingEnemy : PatrollingEnemy {
 
 	protected override float horizontalSpeed{ get{ return isRunning ? maxRunningHorizontalSpeed : maxHorizontalSpeed; } }
 	public float maxRunningHorizontalSpeed = 2f;
-	private bool isRunning{ get{ return ( MinigameTimeManager.instance.time > (runningDurationSecs + lastTimePlayerVisible ) ); } }
+	private bool isRunning{ get{ return ( MinigameTimeManager.instance.time < (runningDurationSecs + lastTimePlayerVisible ) ); } }
 
 	public float visionRange = 3f;
 	public Transform eyesPos;
-	private float lastTimePlayerVisibleCheck;
-	private float lastTimePlayerVisible;
+	private float lastTimePlayerVisibleCheck = float.MinValue;
+	private float lastTimePlayerVisible = float.MinValue;
 	public float runningDurationSecs = 3f;
 	LayerMask layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "PlayerLayer" } );
 
