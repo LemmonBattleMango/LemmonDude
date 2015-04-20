@@ -385,7 +385,6 @@ public class PlayerController : MonoBehaviour {
 				SoundManager.instance.LoopSound( SoundManager.SoundType.Walk, false );
 				animator.SetBool( "isMoving", false );
 				animator.SetBool( "isJumping", false );
-				animator.SetFloat( "isInAir", 0f );
 				animator.SetBool( "isWallGrabbing", false );
 			}
 			else {
@@ -393,7 +392,6 @@ public class PlayerController : MonoBehaviour {
 				runningParticles.enableEmission = true;
 				animator.SetBool( "isMoving", true );
 				animator.SetBool( "isJumping", false );
-				animator.SetFloat( "isInAir", 0f );
 				animator.SetBool( "isWallGrabbing", false );
 			}
 		}
@@ -403,13 +401,11 @@ public class PlayerController : MonoBehaviour {
 			if( isGrabbingToWall ) {
 				animator.SetBool( "isMoving", false );
 				animator.SetBool( "isJumping", false );
-				animator.SetFloat( "isInAir", 0f );
 				animator.SetBool( "isWallGrabbing", true );
 			}
 			else {
 				animator.SetBool( "isMoving", false );
 				animator.SetBool( "isJumping", true );
-				animator.SetFloat( "isInAir", 1f );
 				animator.SetBool( "isWallGrabbing", false );
 			}
 		}
@@ -482,13 +478,14 @@ public class PlayerController : MonoBehaviour {
 		if( currentSpeed.y >= 0 ) {
 			return;
 		}
+
+		isGrabbingToWall = true;
 		float deltaYSpeed = wallFrictionVerticalAcc * MinigameTimeManager.instance.deltaTime;
 		if( Mathf.Abs( currentSpeed.y ) <= deltaYSpeed ) {
 			currentSpeed.y = 0;
 			return;
 		}
 
-		isGrabbingToWall = true;
 		currentSpeed.y -= Mathf.Sign( currentSpeed.y ) * deltaYSpeed;
 		currentSpeed.y = currentSpeed.y < -wallMaxVerticalFallingSpeed ? -wallMaxVerticalFallingSpeed : currentSpeed.y;
 	}
