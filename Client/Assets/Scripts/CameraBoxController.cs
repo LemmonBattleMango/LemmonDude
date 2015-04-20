@@ -13,7 +13,8 @@ public class CameraBoxController : MonoBehaviour {
 	public float minCameraOthographicSize = 3f;
 
 	// References
-	private Camera mainCamera;
+	[System.NonSerialized]
+	public Camera mainCamera;
 	private List<PlayerController> alivePlayers = new List<PlayerController>();
 
 	// Status

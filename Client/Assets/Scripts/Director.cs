@@ -4,7 +4,8 @@ using System.Collections;
 public class Director : DisposableSingleton<Director> {
 
 	// References
-	private CameraBoxController cameraBox;
+	[System.NonSerialized]
+	public CameraBoxController cameraBox;
 	
 	//=====================================
 	void Awake () {
