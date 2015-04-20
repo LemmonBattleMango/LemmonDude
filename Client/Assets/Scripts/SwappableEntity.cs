@@ -12,6 +12,15 @@ public class SwappableEntity : MonoBehaviour {
 	public float groundFrictionAccel = 5f;
 
 	// ====================================================
+	protected void Awake() {
+		Rigidbody2D rigidbody2D = GetComponent<Rigidbody2D>();
+		if( rigidbody2D == null ) {
+			rigidbody2D = gameObject.AddComponent<Rigidbody2D>();
+		}
+		rigidbody2D.isKinematic = true;
+	}
+
+	// ====================================================
 	public virtual void Start() {
 		physicsController = GetComponent<PhysicsController>();
 		physicsController.shouldUseSlopes = true;
