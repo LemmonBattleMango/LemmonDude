@@ -99,6 +99,7 @@ public class PlayerController : MonoBehaviour {
 	public ProjectileController projectilePrefab;
 	[NonSerialized]
 	public ProjectileController currentProjectile;
+	public Animator shootVfxAnimator;
 
 	// ====================================================
 	private void Start() {
@@ -460,6 +461,7 @@ public class PlayerController : MonoBehaviour {
 				currentProjectile.transform.right = direction;
 			}
 		}
+		shootVfxAnimator.SetTrigger( "shootTrigger" );
 		currentProjectile.Configure( direction, this );
 		isAttacking = false;
 	}
