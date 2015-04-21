@@ -23,7 +23,7 @@ public class PatrollingEnemy : SwappableEntity {
 
 	// ====================================================
 	public void Awake() {
-		animator = gameObject.GetComponent<Animator>();
+		animator = gameObject.GetComponentInChildren<Animator>();
 	}
 
 	// ====================================================
