@@ -16,8 +16,15 @@ public class PatrollingEnemy : SwappableEntity {
 
 	protected LayerMask patrolLayerMask;
 	protected RoomController room;
+	protected Animator animator;
 
 	protected bool isEnabled{ get{ return MinigameManager.instance.currentRoom == room; } }
+
+
+	// ====================================================
+	public void Awake() {
+		animator = gameObject.GetComponent<Animator>();
+	}
 
 	// ====================================================
 	public void Configure( RoomController _room ) {
@@ -45,7 +52,8 @@ public class PatrollingEnemy : SwappableEntity {
 		if( physicsController.isGrounded ) {
 			UpdateWalking();
 		}
-		else{ 
+		else{
+			animator.SetBool( "isMoving", false );
 			base.LateUpdate();
 		}
 		if( physicsController.didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
@@ -55,6 +63,8 @@ public class PatrollingEnemy : SwappableEntity {
 
 	// ====================================================
 	protected virtual void UpdateWalking() {
+
+		animator.SetBool( "isMoving", true );
 		UpdateDirection();
 		currentSpeed += currentDirection * horizontalAccel * MinigameTimeManager.instance.deltaTime;
 		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -horizontalSpeed, horizontalSpeed );

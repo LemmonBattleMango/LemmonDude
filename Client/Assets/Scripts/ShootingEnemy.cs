@@ -51,6 +51,8 @@ public class ShootingEnemy : PatrollingEnemy {
 
 	// ====================================================
 	private IEnumerator AttackCoroutine() {
+		animator.SetBool( "isMoving", false );
+		animator.SetTrigger( "shootTrigger" );
 		isAttacking = true;
 		lastAttackTime = MinigameTimeManager.instance.time;
 		float startTime = MinigameTimeManager.instance.time;
