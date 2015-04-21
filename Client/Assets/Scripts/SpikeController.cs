@@ -24,7 +24,7 @@ public class SpikeController : MonoBehaviour {
 	// =====================================
 	private void OnTriggerStay2D( Collider2D other ) {
 		PlayerController player = other.GetComponent<PlayerController>();
-		if( player != null ) {
+		if( player != null && !player.isDead ) {
 			Vector2 direction = transform.TransformDirection( localSpikeDirection ).normalized;
 			if( Vector2.Dot( direction, player.currentSpeed - currentSpeed ) >= -0.1f ) {
 				return;
