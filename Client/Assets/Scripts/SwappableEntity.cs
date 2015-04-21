@@ -12,7 +12,7 @@ public class SwappableEntity : MonoBehaviour {
 	public float groundFrictionAccel = 5f;
 
 	// ====================================================
-	protected void Awake() {
+	protected virtual void Awake() {
 		Rigidbody2D rigidbody2D = GetComponent<Rigidbody2D>();
 		if( rigidbody2D == null ) {
 			rigidbody2D = gameObject.AddComponent<Rigidbody2D>();

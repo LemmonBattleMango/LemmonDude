@@ -12,7 +12,13 @@ public class ChasingEnemy : PatrollingEnemy {
 	private float lastTimePlayerVisibleCheck = float.MinValue;
 	private float lastTimePlayerVisible = float.MinValue;
 	public float runningDurationSecs = 3f;
-	LayerMask layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "PlayerLayer" } );
+	LayerMask layerMask;
+
+	// ====================================================
+	protected override void Awake() {
+		base.Awake();
+		layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "PlayerLayer" } );
+	}
 
 	// ====================================================
 	protected override void UpdateWalking() {

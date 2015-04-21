@@ -10,7 +10,13 @@ public class ShootingEnemy : PatrollingEnemy {
 	private float lastAttackTime;
 	public Transform spawnPosition;
 
-	LayerMask layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "PlayerLayer" } );
+	LayerMask layerMask;
+
+	// ====================================================
+	protected override void Awake() {
+		base.Awake();
+		layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "PlayerLayer" } );
+	}
 
 	// ====================================================
 	protected override void UpdateWalking() {
