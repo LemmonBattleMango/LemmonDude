@@ -32,18 +32,19 @@ public class RoomEntrance : MonoBehaviour {
 		}
 
 		CloseDoor();
-		gameObject.SetActive( false );
 	}
 
 	//======================================================
-	private void CloseDoor() {
+	public void CloseDoor() {
 		GameObject go = new GameObject();
 		go.name = "door";
 		go.transform.parent = targetRoom.transform;
 		go.layer = MinigameManager.instance.levelLayer;
 		BoxCollider2D door = go.AddComponent<BoxCollider2D>();
+		door.enabled = false;
 		door.size = new Vector2( myCollider.size.x, 2f* myCollider.size.y );
 		door.transform.position = transform.position - myCollider.size.x * transform.localScale.x * Vector3.right;
-
+		door.enabled = true;
+		gameObject.SetActive( false );
 	}
 }

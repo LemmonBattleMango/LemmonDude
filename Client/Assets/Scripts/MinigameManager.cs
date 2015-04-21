@@ -119,6 +119,9 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 		else {
 			currentRoom.transform.position = Vector2.zero;
 		}
+		if( currentRoom.entrance != null ) {
+			currentRoom.entrance.CloseDoor();
+		}
 		PlayerFactory.instance.CreatePlayer();
 	}
 }
