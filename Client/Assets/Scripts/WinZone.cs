@@ -19,7 +19,7 @@ public class WinZone : MonoBehaviour {
 	//======================================================
 	private IEnumerator WinCoroutine( PlayerController player ) {
 		MinigameTimeManager.instance.timeScale = 0.1f;
-		player.joystickController.ForceDirection( Vector2.right, DURATION_SECS );
+		player.joystickController.ForceDirection( Vector2.zero, DURATION_SECS );
 		yield return new WaitForSeconds( DURATION_SECS );
 		Application.LoadLevel( "SplashScene" );
 	}
