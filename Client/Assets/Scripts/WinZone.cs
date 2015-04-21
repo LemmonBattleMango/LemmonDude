@@ -18,6 +18,7 @@ public class WinZone : MonoBehaviour {
 
 	//======================================================
 	private IEnumerator WinCoroutine( PlayerController player ) {
+		player.didWon = true;
 		MinigameTimeManager.instance.timeScale = 0.3f;
 		player.joystickController.ForceDirection( Vector2.zero, DURATION_SECS );
 		yield return new WaitForSeconds( DURATION_SECS );

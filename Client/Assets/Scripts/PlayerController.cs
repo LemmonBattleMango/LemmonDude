@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour {
 	private float lastJumpButtonTime;
 	private float lastAbleToJumpTime;
 	private bool hasPendingJump;
+	public bool didWon;
 
 	private bool isJumpingFromGround;
 	private float lastJumpFromGroundTime;
@@ -161,7 +162,7 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	void Die() {
-		if( isDead ) {
+		if( isDead || didWon ) {
 			return;
 		}
 		Log.Debug( "PlayerController.Die()" );
