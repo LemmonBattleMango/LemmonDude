@@ -5,6 +5,8 @@ public class JoystickController : MonoBehaviour {
 
 	private KeyCode jumpKey = KeyCode.Z;
 	private KeyCode fireKey = KeyCode.X;
+	private KeyCode altJumpKey = KeyCode.Space;
+	private KeyCode altFireKey = KeyCode.LeftShift;
 
 	private Vector2 forcedDirection;
 	private float forcedDirectionExpirationTime = -1f;
@@ -45,22 +47,22 @@ public class JoystickController : MonoBehaviour {
 
 	//======================================================
 	public bool GetJumpButton() {
-		return Input.GetKey( jumpKey );
+		return Input.GetKey( jumpKey ) || Input.GetKey( altJumpKey );
 	}
 
 	//======================================================
 	public bool GetJumpButtonDown() {
-		return Input.GetKeyDown( jumpKey );
+		return Input.GetKeyDown( jumpKey ) || Input.GetKeyDown( altJumpKey );
 	}
 
 	//======================================================
 	public bool GetFireButton() {
-		return Input.GetKey( fireKey );
+		return Input.GetKey( fireKey ) || Input.GetKey( altFireKey );
 	}
 
 	//======================================================
 	public bool GetFireButtonDown() {
-		return Input.GetKeyDown( fireKey );
+		return Input.GetKeyDown( fireKey ) || Input.GetKeyDown( altFireKey );
 	}
 
 }
