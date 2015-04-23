@@ -64,8 +64,14 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 		}
 		#endif
 
+		if( Input.GetKeyDown( KeyCode.R ) && PlayerFactory.instance.currentPlayer != null && !PlayerFactory.instance.currentPlayer.isDead ) {
+			PlayerFactory.instance.currentPlayer.InstaDeath();
+			return;
+		}
+
 		if( Input.GetKeyDown( KeyCode.Escape ) ) {
 			Application.LoadLevel( "MainMenuScene" );
+			return;
 		}
 	}
 
