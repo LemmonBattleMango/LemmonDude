@@ -21,10 +21,10 @@ public class PlayerFactory : DisposableSingleton<PlayerFactory> {
 		player.name = "Player";
 
 		PlayerController playerController = player.GetComponent<PlayerController>();
-		//playerController.Initialize();
+		playerController.Initialize();
 		playerController.onDeath += MinigameManager.instance.OnPlayerDeath;
-
 		currentPlayer = ( playerController );
+
 		return playerController;
 	}
 

@@ -56,7 +56,7 @@ public class PhysicsController : MonoBehaviour {
 	public bool shouldUseSlopes = false;
 
 	// =====================================
-	private void Start() {
+	public void Initialize() {
 		offLayer = LayerMask.NameToLayer( "OffLayer" );
 		characterLayer = LayerMask.NameToLayer( "PlayerLayer" );
 		oneWayCollisionLayer = LayerMask.NameToLayer( "OneWayPlatformLayer" );

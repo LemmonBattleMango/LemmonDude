@@ -103,11 +103,6 @@ public class PlayerController : MonoBehaviour {
 	public Animator shootVfxAnimator;
 
 	// ====================================================
-	private void Start() {
-		Initialize();
-	}
-
-	// ====================================================
 	public void Initialize() {
 
 		prevPos = VectorUtils.GetPosition2D( transform.position );
@@ -126,8 +121,9 @@ public class PlayerController : MonoBehaviour {
 		physicsController.shouldUseSlopes = false;
 		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer" } ),
 		                                     LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer", "OneWayPlatformLayer" } ) );
-			 
-		isDead = false;	
+
+		physicsController.Initialize();
+		isDead = false;
 	}
 
 	// ====================================================
@@ -526,6 +522,8 @@ public class PlayerController : MonoBehaviour {
 		swappableEntity.SetPosition( previousPos );
 		swappableEntity.SetRotation( previousRotation );
 		swappableEntity.SetVelocity( previousSpeed );
+
+		prevPos = VectorUtils.GetPosition2D( transform.position );
 
 		PatrollingEnemy patroller = swappableEntity as PatrollingEnemy;
 		if( patroller != null ) {

@@ -26,6 +26,7 @@ public class SwappableEntity : MonoBehaviour {
 		physicsController.shouldUseSlopes = true;
 		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer" } ),
 		                                     LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer", "OneWayPlatformLayer" } ) );
+		physicsController.Initialize();
 	}
 
 	//=====================================
