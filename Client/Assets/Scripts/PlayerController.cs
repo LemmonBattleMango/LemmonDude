@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviour {
 	[NonSerialized]
 	public ProjectileController currentProjectile;
 	public Animator shootVfxAnimator;
+	public Animator deathVfxAnimator;
 
 	// ====================================================
 	public void Initialize() {
@@ -165,6 +166,7 @@ public class PlayerController : MonoBehaviour {
 		Director.instance.ScreenShake( 0.05f, 0.1f );
 
 		isDead = true;
+		deathVfxAnimator.SetTrigger( "deathTrigger" );
 		animator.SetBool( "isDeath", true );
 		SoundManager.instance.PlaySound(SoundManager.SoundType.Death);
 
