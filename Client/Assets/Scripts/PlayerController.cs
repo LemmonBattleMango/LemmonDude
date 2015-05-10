@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
 	public JoystickController joystickController;
 	[HideInInspector]
 	public PhysicsController physicsController;
-	private Animator animator;
+	public Animator animator;
 	private AnimationListener animationListener;
 	public ParticleSystem runningParticles;
 
@@ -115,7 +115,6 @@ public class PlayerController : MonoBehaviour {
 		animationListener = GetComponentInChildren<AnimationListener>();
 		MinigameTimeManager.instance.onTimeScaleChanged += OnTimeScaleChangedHandler;
 
-		animator = GetComponentInChildren<Animator>();
 		Director.instance.OnPlayerSpawn( this );
 
 		physicsController = GetComponent<PhysicsController>();
