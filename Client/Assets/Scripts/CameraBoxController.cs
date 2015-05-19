@@ -12,6 +12,9 @@ public class CameraBoxController : MonoBehaviour {
 	public float maxEdgeOffsetY = 3f;
 	public float minCameraOthographicSize = 3f;
 
+	public float aspectHeight = 10f;
+	public float aspectWidth = 10f;
+
 	// References
 	[System.NonSerialized]
 	public Camera mainCamera;
@@ -26,6 +29,24 @@ public class CameraBoxController : MonoBehaviour {
 		mainCamera = GetComponentInChildren<Camera>();
 		targetPosition = transform.position;
 		targetOthographicSize = mainCamera.orthographicSize;
+
+		SetViewport();
+	}
+
+	//=====================================
+	void SetViewport() {
+		float targetAspect = aspectWidth / aspectHeight;
+		float screenAspect = ( ( float ) Screen.width ) / ( ( float ) Screen.height );
+		if( screenAspect > targetAspect ) {
+			float newWidth = Screen.height * targetAspect;
+			float delta = 0.5f - 0.5f * ( newWidth / Screen.width );
+			mainCamera.rect = new Rect( delta, 0f, 1f - 2f * delta, 1f );
+		}
+		else {
+			float newHeight = Screen.width / targetAspect;
+			float delta = 0.5f - 0.5f * ( newHeight / Screen.height );
+			mainCamera.rect = new Rect( 0f, delta, 1f, 1f - 2f * delta );
+		}
 	}
 
 	//=====================================
@@ -43,6 +64,10 @@ public class CameraBoxController : MonoBehaviour {
 
 	// ====================================================
 	private void LateUpdate() {
+
+		#if UNITY_EDITOR
+		SetViewport();
+		#endif
 
 		RoomController room = MinigameManager.instance.currentRoom;
 		Vector3 bottomLeftPos = room.bottomLeftPos;
