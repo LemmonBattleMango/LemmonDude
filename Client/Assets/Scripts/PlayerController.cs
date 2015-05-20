@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour {
 	[HideInInspector]
 	public bool isGrabbingToWall;
 
-	private bool hasDoubleJumped;
+	private bool canDoubleJumped;
 	public int hp;
 
 	private CollisionType lastJumpableSurface;
@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if( physicsController.isGrounded ) {
-			hasDoubleJumped = false;
+			canDoubleJumped = false;
 			lastJumpableSurface = CollisionType.GROUND;
 			if( movementDirection != Vector2.zero ) {
 				currentSpeed += movementDirection * walkingAccel * deltaTime;
@@ -270,7 +270,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 		else if( physicsController.didHitLeft ) {
-			hasDoubleJumped = false;
+			canDoubleJumped = false;
 			lastJumpableSurface = CollisionType.LEFT_WALL;
 			if( movementDirection != Vector2.zero ) {
 				currentSpeed += movementDirection * walkingAccel * deltaTime;
@@ -283,7 +283,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 		else if( physicsController.didHitRight ) {
-			hasDoubleJumped = false;
+			canDoubleJumped = false;
 			lastJumpableSurface = CollisionType.RIGHT_WALL;
 			if( movementDirection != Vector2.zero ) {
 				currentSpeed += movementDirection * walkingAccel * deltaTime;
@@ -338,16 +338,13 @@ public class PlayerController : MonoBehaviour {
 				lastJumpFromGroundTime = MinigameTimeManager.instance.time;
 			}
 		}
-		else if( !hasDoubleJumped && jumpButtonDown ) {
+		else if( canDoubleJumped && jumpButtonDown ) {
 //			SoundManager.instance.PlaySound( SoundManager.SoundType.DoubleJump );
 //			animator.SetFloat( "isSecondJumping", 1f );
 			hasPendingJump = false;
-			hasDoubleJumped = true;
-//			currentSpeed.y = airJumpSpeed;
-//			currentSpeed.x += 0.7f * movementDirection.x * maxHorizontalSpeed;
-		}
-		if( !hasDoubleJumped ) {
-			//animator.SetFloat( "isSecondJumping", 0f );
+			canDoubleJumped = false;
+			currentSpeed.y = airJumpSpeed;
+			currentSpeed.x += 0.7f * movementDirection.x * maxHorizontalSpeed;
 		}
 
 		if( fireButtonDown ) {
@@ -524,11 +521,14 @@ public class PlayerController : MonoBehaviour {
 		swappableEntity.SetRotation( previousRotation );
 		swappableEntity.SetVelocity( previousSpeed );
 
+		canDoubleJumped = true;
+
 		prevPos = VectorUtils.GetPosition2D( transform.position );
 
 		PatrollingEnemy patroller = swappableEntity as PatrollingEnemy;
 		if( patroller != null ) {
 			patroller.SetDirectionAsForward();
 		}
+		swappableEntity.enabled = true;
 	}
 }
