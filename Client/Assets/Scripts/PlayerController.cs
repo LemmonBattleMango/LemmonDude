@@ -521,7 +521,7 @@ public class PlayerController : MonoBehaviour {
 
 		transform.position = VectorUtils.GetPosition3D( swappableEntity.GetPosition() );
 		transform.rotation = swappableEntity.GetRotation();
-		currentSpeed = swappableEntity.GetVelocity();
+		//currentSpeed = swappableEntity.GetVelocity();
 
 		swappableEntity.SetPosition( previousPos );
 		swappableEntity.SetRotation( previousRotation );
