@@ -110,6 +110,7 @@ public class PlayerController : MonoBehaviour {
 		nextFireTime = nextProjectileTime = MinigameTimeManager.instance.time;
 
 		joystickController = GetComponent<JoystickController>();
+		joystickController.Initialize();
 
 		hp = initialHP;
 		animationListener = GetComponentInChildren<AnimationListener>();
