@@ -442,13 +442,20 @@ public class PlayerController : MonoBehaviour {
 			float oldHorizontalDir = Mathf.Sign( transform.localScale.x );
 			direction.x *= oldHorizontalDir;
 			float maxValue = float.MinValue;
-			foreach( ProjectileDirection key in directionsCache.Keys ) {
+			/*foreach( ProjectileDirection key in directionsCache.Keys ) {
 				float value = Vector2.Dot( direction, directionsCache[key] );
 				if( value < maxValue ) {
 					continue;
 				}
 				maxValue = value;
 				projectileDirection = key;
+			}*/
+
+			if( direction.y > 0.4f ) {
+				projectileDirection = ProjectileDirection.UP;
+			}
+			else if( direction.y < -0.4f ) {
+				projectileDirection = ProjectileDirection.DOWN;
 			}
 			direction = directionsCache[projectileDirection];
 			// return to old direction
