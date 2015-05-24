@@ -530,6 +530,8 @@ public class PlayerController : MonoBehaviour {
 		transform.rotation = swappableEntity.GetRotation();
 		//currentSpeed = swappableEntity.GetVelocity();
 
+		currentSpeed.y = currentSpeed.y < 0f ? 0f : currentSpeed.y;
+
 		swappableEntity.SetPosition( previousPos );
 		swappableEntity.SetRotation( previousRotation );
 		swappableEntity.SetVelocity( previousSpeed );
