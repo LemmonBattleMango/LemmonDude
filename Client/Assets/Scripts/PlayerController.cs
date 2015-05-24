@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour {
 	public Vector2 currentSpeed;
 	[System.NonSerialized]
 	private float movementSpeedFactor = 1f;
+	public bool isSwapping;
 
 	private float nextFireTime;
 	private float nextProjectileTime;
@@ -159,7 +160,7 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	void Die() {
-		if( isDead || didWon ) {
+		if( isDead || didWon || isSwapping ) {
 			return;
 		}
 		Log.Debug( "PlayerController.Die()" );
@@ -223,6 +224,10 @@ public class PlayerController : MonoBehaviour {
 		if( jumpButtonDown ) {
 			lastJumpButtonTime = MinigameTimeManager.instance.time;
 			hasPendingJump = true;
+		}
+
+		if( isSwapping ) {
+			return;
 		}
 
 		bool canJump = ( Mathf.Abs( lastAbleToJumpTime - lastJumpButtonTime ) <= jumpTimeRangeSecs ) && hasPendingJump;
@@ -339,7 +344,7 @@ public class PlayerController : MonoBehaviour {
 				lastJumpFromGroundTime = MinigameTimeManager.instance.time;
 			}
 		}
-		else if( canDoubleJumped && jumpButtonDown ) {
+		else if( canDoubleJumped && hasPendingJump ) {
 //			SoundManager.instance.PlaySound( SoundManager.SoundType.DoubleJump );
 //			animator.SetFloat( "isSecondJumping", 1f );
 			hasPendingJump = false;
@@ -520,6 +525,11 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	public void Swap( SwappableEntity swappableEntity ) {
+		StartCoroutine( SwapCoroutine( swappableEntity ) );
+	}
+
+	// ====================================================
+	private IEnumerator SwapCoroutine( SwappableEntity swappableEntity ) {
 		SoundManager.instance.PlaySound( SoundManager.SoundType.Swap );
 
 		Vector2 previousPos = transform.position;
@@ -527,21 +537,33 @@ public class PlayerController : MonoBehaviour {
 		Vector2 previousSpeed = currentSpeed;
 
 		transform.position = VectorUtils.GetPosition3D( swappableEntity.GetPosition() );
-		transform.rotation = swappableEntity.GetRotation();
+		//transform.rotation = swappableEntity.GetRotation();
 		//currentSpeed = swappableEntity.GetVelocity();
 
 		swappableEntity.SetPosition( previousPos );
 		swappableEntity.SetRotation( previousRotation );
 		swappableEntity.SetVelocity( previousSpeed );
 
-		canDoubleJumped = true;
-
-		prevPos = VectorUtils.GetPosition2D( transform.position );
-
 		PatrollingEnemy patroller = swappableEntity as PatrollingEnemy;
 		if( patroller != null ) {
 			patroller.SetDirectionAsForward();
 		}
 		swappableEntity.enabled = true;
+
+		isSwapping = true;
+
+		deathVfxAnimator.SetTrigger( "deathTrigger" );
+		animator.gameObject.SetActive( false );
+		yield return new WaitForSeconds( 0.2f );
+		isSwapping = false;
+		animator.gameObject.SetActive( true );
+		currentSpeed = previousSpeed;
+		currentSpeed.y = currentSpeed.y < 0f ? 0f : currentSpeed.y;
+
+		canDoubleJumped = true;
+
+		prevPos = VectorUtils.GetPosition2D( transform.position );
+
+
 	}
 }
