@@ -425,10 +425,6 @@ public class PlayerController : MonoBehaviour {
 			yield break;
 		}
 
-		if( isGrabbingToWall ) {
-			// do not shot
-			yield break;
-		}
 		if( nextFireTime > MinigameTimeManager.instance.time ) {
 			yield break;
 		}
@@ -442,8 +438,8 @@ public class PlayerController : MonoBehaviour {
 		}
 		if( isGrabbingToWall ) {
 			//TODO: check
-//			direction = Vector3.right * Mathf.Sign( transform.localScale.x );
-//			projectileDirection = ProjectileDirection.FORWARD;
+			direction = Vector3.right * Mathf.Sign( transform.localScale.x );
+			projectileDirection = ProjectileDirection.FORWARD;
 		}
 		else {
 			float oldHorizontalDir = Mathf.Sign( transform.localScale.x );
