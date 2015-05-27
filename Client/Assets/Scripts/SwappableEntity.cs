@@ -10,6 +10,7 @@ public class SwappableEntity : MonoBehaviour {
 	[HideInInspector]
 	public Vector2 currentSpeed = Vector2.zero;
 	public float groundFrictionAccel = 5f;
+	public bool skipUpdates;
 
 	// ====================================================
 	protected virtual void Awake() {
@@ -62,6 +63,9 @@ public class SwappableEntity : MonoBehaviour {
 	// ====================================================
 	protected virtual void LateUpdate() {
 
+		if( skipUpdates ) {
+			return;
+		}
 		float deltaTime = MinigameTimeManager.instance.deltaTime;
 
 		// Apply Gravity
@@ -102,5 +106,10 @@ public class SwappableEntity : MonoBehaviour {
 		}
 		
 		currentSpeed.x -= Mathf.Sign( currentSpeed.x ) * deltaXSpeed;
+	}
+
+	//=====================================
+	public void OnSwap(){
+		skipUpdates = false;
 	}
 }

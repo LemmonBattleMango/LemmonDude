@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour {
 	public Vector2 currentSpeed;
 	[System.NonSerialized]
 	private float movementSpeedFactor = 1f;
+	[System.NonSerialized]
 	public bool isSwapping;
 
 	private float nextFireTime;
@@ -419,6 +420,7 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	private IEnumerator FireCoroutine( Vector2 direction ) {
+		direction.Normalize();
 		if( currentProjectile != null ) {
 			yield break;
 		}
@@ -446,8 +448,8 @@ public class PlayerController : MonoBehaviour {
 		else {
 			float oldHorizontalDir = Mathf.Sign( transform.localScale.x );
 			direction.x *= oldHorizontalDir;
-			float maxValue = float.MinValue;
-			/*foreach( ProjectileDirection key in directionsCache.Keys ) {
+			/*float maxValue = float.MinValue;
+			foreach( ProjectileDirection key in directionsCache.Keys ) {
 				float value = Vector2.Dot( direction, directionsCache[key] );
 				if( value < maxValue ) {
 					continue;
@@ -537,18 +539,20 @@ public class PlayerController : MonoBehaviour {
 		Vector2 previousSpeed = currentSpeed;
 
 		transform.position = VectorUtils.GetPosition3D( swappableEntity.GetPosition() );
+
+		bool wasSwappableEntityGrounded = swappableEntity.physicsController.isGrounded;
 		//transform.rotation = swappableEntity.GetRotation();
 		//currentSpeed = swappableEntity.GetVelocity();
 
 		swappableEntity.SetPosition( previousPos );
-		swappableEntity.SetRotation( previousRotation );
+		//swappableEntity.SetRotation( previousRotation );
 		swappableEntity.SetVelocity( previousSpeed );
 
 		PatrollingEnemy patroller = swappableEntity as PatrollingEnemy;
 		if( patroller != null ) {
 			patroller.SetDirectionAsForward();
 		}
-		swappableEntity.enabled = true;
+		swappableEntity.OnSwap();
 
 		isSwapping = true;
 
@@ -558,8 +562,22 @@ public class PlayerController : MonoBehaviour {
 		isSwapping = false;
 		animator.gameObject.SetActive( true );
 		currentSpeed = previousSpeed;
-		currentSpeed.y = currentSpeed.y < 0f ? 0f : currentSpeed.y;
-
+		if( wasSwappableEntityGrounded ) {
+			currentSpeed.y = 0f;
+			Vector2 direction = joystickController.GetDirection();
+			if( direction.x > 0.4f ) {
+				currentSpeed.x = maxHorizontalSpeed;
+			}
+			else if( direction.x < -0.4f ) {
+				currentSpeed.x = -maxHorizontalSpeed;
+			}
+			else {
+				currentSpeed.x = 0f;
+			}
+		}
+		else {
+			currentSpeed.y = currentSpeed.y < 0f ? 0f : currentSpeed.y;
+		}
 		canDoubleJumped = true;
 
 		prevPos = VectorUtils.GetPosition2D( transform.position );
