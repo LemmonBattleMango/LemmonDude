@@ -45,7 +45,7 @@ public class ShootingEnemy : PatrollingEnemy {
 
 		lastTryAttackTime = MinigameTimeManager.instance.time;
 		PlayerController player = PlayerFactory.instance.currentPlayer;
-		if( player == null || player.isDead ) {
+		if( player == null || player.isDead || player.isSwapping ) {
 			return;
 		}
 		Vector2 direction = Vector2.right * myTransform.localScale.x;
