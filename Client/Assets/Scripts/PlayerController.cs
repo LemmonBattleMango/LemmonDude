@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour {
 
 	private bool isJumpingFromGround;
 	private float lastJumpFromGroundTime;
+	private float startedGrabbingWallTime;
 
 	private bool isJumpingFromWall;
 	private float lastJumpFromWallTime;
@@ -186,6 +187,7 @@ public class PlayerController : MonoBehaviour {
 	// ====================================================
 	private void LateUpdate() {
 
+		bool wasGrabbingToWall = isGrabbingToWall;	// on previous frame
 		isGrabbingToWall = false;
 
 		float deltaTime = MinigameTimeManager.instance.deltaTime;
@@ -218,7 +220,11 @@ public class PlayerController : MonoBehaviour {
 		// Apply Gravity
 		currentSpeed -= Vector2.up * gravityAccel * deltaTime * fallingDownFactor;
 
-		if( physicsController.isGrounded || physicsController.didHitLeft || physicsController.didHitRight ) {
+		bool canWallJump = !physicsController.isGrounded
+			&& ( physicsController.didHitLeft || physicsController.didHitRight )
+			&& startedGrabbingWallTime > 0f
+			&& ( startedGrabbingWallTime + 0.1f ) < MinigameTimeManager.instance.time;
+		if( physicsController.isGrounded || canWallJump ) {
 			lastAbleToJumpTime = MinigameTimeManager.instance.time;
 		}
 
@@ -309,6 +315,13 @@ public class PlayerController : MonoBehaviour {
 			else {
 				ApplyFriction( airFrictionHorizontalAccel );
 			}
+		}
+
+		if( !wasGrabbingToWall && isGrabbingToWall ) {
+			startedGrabbingWallTime = MinigameTimeManager.instance.time;
+		}
+		else if( !isGrabbingToWall ) {
+			startedGrabbingWallTime = -1f;
 		}
 
 		bool startJumpingDown = false;
