@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour {
 		bool canWallJump = !physicsController.isGrounded
 			&& ( physicsController.didHitLeft || physicsController.didHitRight )
 			&& startedGrabbingWallTime > 0f
-			&& ( startedGrabbingWallTime + 0.1f ) < MinigameTimeManager.instance.time;
+			&& ( startedGrabbingWallTime + 0.09f ) < MinigameTimeManager.instance.time;
 		if( physicsController.isGrounded || canWallJump ) {
 			lastAbleToJumpTime = MinigameTimeManager.instance.time;
 		}
@@ -231,6 +231,9 @@ public class PlayerController : MonoBehaviour {
 		if( jumpButtonDown ) {
 			lastJumpButtonTime = MinigameTimeManager.instance.time;
 			hasPendingJump = true;
+			if( !canWallJump && !physicsController.isGrounded && ( physicsController.didHitLeft || physicsController.didHitRight ) ) {
+				currentSpeed.y = 0f;
+			}
 		}
 
 		if( isSwapping ) {
@@ -501,7 +504,7 @@ public class PlayerController : MonoBehaviour {
 			return;
 		}
 
-		if( currentSpeed.y >= 0 ) {
+		if( currentSpeed.y > 0 ) {
 			return;
 		}
 
