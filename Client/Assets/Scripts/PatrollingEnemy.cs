@@ -82,12 +82,6 @@ public class PatrollingEnemy : SwappableEntity {
 	}
 
 	// ====================================================
-	public void InstaDeath() {
-		SoundManager.instance.PlaySound( SoundManager.SoundType.EnemyDeath );
-		Destroy( gameObject );
-	}
-
-	// ====================================================
 	private void UpdateDirection() {
 		if( MinigameTimeManager.instance.time < lastDirectionChange + 0.3f ) {
 			return;

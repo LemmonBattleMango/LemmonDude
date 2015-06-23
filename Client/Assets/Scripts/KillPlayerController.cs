@@ -10,9 +10,9 @@ public class KillPlayerController : MonoBehaviour {
 			player.InstaDeath();
 		}
 
-		PatrollingEnemy enemy = other.GetComponent<PatrollingEnemy>();
-		if( enemy != null ) {
-			enemy.InstaDeath();
+		SwappableEntity swappableEntity = other.GetComponent<SwappableEntity>();
+		if( swappableEntity != null ) {
+			swappableEntity.InstaDeath();
 		}
 	}
 }

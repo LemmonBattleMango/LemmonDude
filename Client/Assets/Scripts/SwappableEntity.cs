@@ -10,7 +10,7 @@ public class SwappableEntity : MonoBehaviour {
 	[HideInInspector]
 	public Vector2 currentSpeed = Vector2.zero;
 	public float groundFrictionAccel = 5f;
-	public bool skipUpdates;
+	protected Transform myTranform;
 
 	// ====================================================
 	protected virtual void Awake() {
@@ -19,6 +19,7 @@ public class SwappableEntity : MonoBehaviour {
 			rigidbody2D = gameObject.AddComponent<Rigidbody2D>();
 		}
 		rigidbody2D.isKinematic = true;
+		myTranform = transform;
 	}
 
 	// ====================================================
@@ -32,12 +33,12 @@ public class SwappableEntity : MonoBehaviour {
 
 	//=====================================
 	public Vector2 GetPosition(){
-		return transform.position;
+		return myTranform.position;
 	}
 	
 	//=====================================
 	public Quaternion GetRotation(){
-		return transform.rotation; 
+		return myTranform.rotation; 
 	}
 	
 	//=====================================
@@ -47,12 +48,12 @@ public class SwappableEntity : MonoBehaviour {
 
 	//=====================================
 	public void SetPosition( Vector2 pos ){
-		transform.position = VectorUtils.GetPosition3D( pos );
+		myTranform.position = VectorUtils.GetPosition3D( pos );
 	}
 	
 	//=====================================
 	public void SetRotation( Quaternion rot ){
-		transform.rotation = rot;
+		myTranform.rotation = rot;
 	}
 	
 	//=====================================
@@ -63,9 +64,6 @@ public class SwappableEntity : MonoBehaviour {
 	// ====================================================
 	protected virtual void LateUpdate() {
 
-		if( skipUpdates ) {
-			return;
-		}
 		float deltaTime = MinigameTimeManager.instance.deltaTime;
 
 		// Apply Gravity
@@ -81,16 +79,16 @@ public class SwappableEntity : MonoBehaviour {
 		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -GlobalConfig.instance.maxHorizontalSpeed, GlobalConfig.instance.maxHorizontalSpeed );
 		currentSpeed.y = Mathf.Clamp( currentSpeed.y, -GlobalConfig.instance.maxVerticalSpeed, float.MaxValue );
 		
-		Vector2 prevPos = VectorUtils.GetPosition2D( transform.position );
+		Vector2 prevPos = VectorUtils.GetPosition2D( myTranform.position );
 		physicsController.Move( currentSpeed * deltaTime, false );
 		
 		// updating the current speed
-		currentSpeed = ( VectorUtils.GetPosition2D( transform.position ) - prevPos ) / MinigameTimeManager.instance.deltaTime;
+		currentSpeed = ( VectorUtils.GetPosition2D( myTranform.position ) - prevPos ) / MinigameTimeManager.instance.deltaTime;
 		//		currentSpeed.x = ( physicsController.didHitLeft || physicsController.didHitRight ) ? 0 : currentSpeed.x;
 		//		currentSpeed.y = ( physicsController.didHitCeiling || physicsController.isGrounded ) ? 0 : currentSpeed.y;
 		
 		if( currentSpeed.x != 0 ) {
-			transform.localScale = new Vector3( Mathf.Sign( currentSpeed.x ), 1f, 1f );
+			myTranform.localScale = new Vector3( Mathf.Sign( currentSpeed.x ), 1f, 1f );
 		}
 	}
 
@@ -109,7 +107,13 @@ public class SwappableEntity : MonoBehaviour {
 	}
 
 	//=====================================
-	public void OnSwap(){
-		skipUpdates = false;
+	public virtual void OnSwap(){
+		// nop
+	}
+
+	// ====================================================
+	public void InstaDeath() {
+		SoundManager.instance.PlaySound( SoundManager.SoundType.EnemyDeath );
+		Destroy( gameObject );
 	}
 }
