@@ -5,7 +5,6 @@ public class GlobalConfig : DisposableSingleton<GlobalConfig> {
 
 	//Player Config
 	public float gravityAccel = 10f;
-	public int initialHP = 10;
 
 	public float maxVerticalSpeed = 25f;
 	public float maxHorizontalSpeed = 7f;

@@ -198,7 +198,6 @@ public class PhysicsController : MonoBehaviour {
 		int layer = gameObject.layer;
 		gameObject.layer = offLayer;
 
-		bool wasGrounded = isGrounded;
 		isGrounded = false;
 		didHitCeiling = false;
 		didHitLeft = false;

@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	//Player Config
-	public float maxVerticalSpeed { get{ return GlobalConfig.instance.maxVerticalSpeed * movementSpeedFactor; } }
-	public float maxHorizontalSpeed { get{ return GlobalConfig.instance.maxHorizontalSpeed * movementSpeedFactor; } }
+	public float maxVerticalSpeed { get{ return GlobalConfig.instance.maxVerticalSpeed; } }
+	public float maxHorizontalSpeed { get{ return GlobalConfig.instance.maxHorizontalSpeed; } }
 	public float walkingAccel { get{ return GlobalConfig.instance.walkingAccel; } }
 	public float groundFrictionHorizontalAccel { get{ return GlobalConfig.instance.groundFrictionHorizontalAccel; } }
 	public float airFrictionHorizontalAccel { get{ return GlobalConfig.instance.airFrictionHoizontalAccel; } }
@@ -38,11 +38,10 @@ public class PlayerController : MonoBehaviour {
 	public float wallJumpVerticalSpeed { get{ return CalculateSpeed( minJumpHeight ); } }
 
 	public float attackDelay { get{ return GlobalConfig.instance.attackDelay; } }
-	public int initialHP { get{ return GlobalConfig.instance.initialHP; } }
 
 	public float wallJumpHorizontalSpeed { get{ return GlobalConfig.instance.wallJumpHorizontalSpeed; } }
 
-	public float gravityAccel { get{ return Mathf.Sqrt( movementSpeedFactor ) * GlobalConfig.instance.gravityAccel; } }
+	public float gravityAccel { get{ return GlobalConfig.instance.gravityAccel; } }
 
 	// References
 	[NonSerialized]
@@ -50,7 +49,6 @@ public class PlayerController : MonoBehaviour {
 	[HideInInspector]
 	public PhysicsController physicsController;
 	public Animator animator;
-	private AnimationListener animationListener;
 	public ParticleSystem runningParticles;
 
 	// Status
@@ -59,12 +57,9 @@ public class PlayerController : MonoBehaviour {
 	[System.NonSerialized]
 	public Vector2 currentSpeed;
 	[System.NonSerialized]
-	private float movementSpeedFactor = 1f;
-	[System.NonSerialized]
 	public bool isSwapping;
 
 	private float nextFireTime;
-	private float nextProjectileTime;
 	[HideInInspector]
 	public bool isAttacking;
 	[HideInInspector]
@@ -87,8 +82,6 @@ public class PlayerController : MonoBehaviour {
 	private float lastJumpFromWallTime;
 
 	public System.Action<PlayerController> onDeath;
-	
-	private bool hasKnockback;
 	Vector2 prevPos;
 	
 	public List <ProjectileSpawnPointInfo> projectileSpawnPointInfos;
@@ -109,13 +102,11 @@ public class PlayerController : MonoBehaviour {
 	public void Initialize() {
 
 		prevPos = VectorUtils.GetPosition2D( transform.position );
-		nextFireTime = nextProjectileTime = MinigameTimeManager.instance.time;
+		nextFireTime = MinigameTimeManager.instance.time;
 
 		joystickController = GetComponent<JoystickController>();
 		joystickController.Initialize();
 
-		hp = initialHP;
-		animationListener = GetComponentInChildren<AnimationListener>();
 		MinigameTimeManager.instance.onTimeScaleChanged += OnTimeScaleChangedHandler;
 
 		Director.instance.OnPlayerSpawn( this );
@@ -142,19 +133,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	// ====================================================
-	public void ApplyKnockBack( Vector2 knockbackVelocity, float duration ) {
-		StartCoroutine( ApplyKnockBackCoroutine( knockbackVelocity, duration ) );
-	}
-
-	// ====================================================
-	public IEnumerator ApplyKnockBackCoroutine( Vector2 knockbackVelocity, float duration ) {
-		hasKnockback = true;
-		currentSpeed = knockbackVelocity;
-		yield return StartCoroutine( MinigameTimeManager.instance.WaitForSecs( duration ) );
-		hasKnockback = false;
-	}
-
-	// ====================================================
 	private float CalculateSpeed( float targetHeight ) {
 		return Mathf.Sqrt( 2f * gravityAccel * targetHeight );
 	}
@@ -169,7 +147,7 @@ public class PlayerController : MonoBehaviour {
 
 		isDead = true;
 		deathVfxAnimator.SetTrigger( "deathTrigger" );
-		animator.SetBool( "isDeath", true );
+		//animator.SetBool( "isDeath", true );
 		SoundManager.instance.PlaySound(SoundManager.SoundType.Death);
 
 		//yield return StartCoroutine( MinigameTimeManager.instance.WaitForSecs( 0.6f ) );
@@ -199,10 +177,8 @@ public class PlayerController : MonoBehaviour {
 			direction = joystickController.GetDirection();
 			fireButtonDown = joystickController.GetFireButtonDown();
 
-			if( !hasKnockback ) {
-				jumpButtonDown = joystickController.GetJumpButtonDown();
-				jumpButtonHeld = joystickController.GetJumpButton();
-			}
+			jumpButtonDown = joystickController.GetJumpButtonDown();
+			jumpButtonHeld = joystickController.GetJumpButton();
 		}
 
 		Vector2 movementDirection = Vector2.Scale( direction, Vector2.right );
@@ -361,15 +337,11 @@ public class PlayerController : MonoBehaviour {
 		currentSpeed.x = Mathf.Clamp( currentSpeed.x, -maxHorizontalSpeed, maxHorizontalSpeed );
 		currentSpeed.y = Mathf.Clamp( currentSpeed.y, -maxVerticalSpeed, float.MaxValue );
 
-		Vector2 prevSpeed = ( VectorUtils.GetPosition2D( transform.position ) - prevPos ) / MinigameTimeManager.instance.deltaTime;
 		prevPos = VectorUtils.GetPosition2D( transform.position );
 		physicsController.Move( currentSpeed * deltaTime, startJumpingDown );
 
 		// updating the current speed
-		Vector2 oldCurrentSpeed = currentSpeed;
 		currentSpeed = ( VectorUtils.GetPosition2D( transform.position ) - prevPos ) / MinigameTimeManager.instance.deltaTime;
-//		currentSpeed.x = ( physicsController.didHitLeft || physicsController.didHitRight ) ? 0 : currentSpeed.x;
-//		currentSpeed.y = ( physicsController.didHitCeiling || physicsController.isGrounded ) ? 0 : currentSpeed.y;
 
 		if( direction.x != 0 && !isAttacking && !isGrabbingToWall ) {
 			transform.localScale = new Vector3( Mathf.Sign( direction.x ), 1f, 1f );
@@ -484,9 +456,6 @@ public class PlayerController : MonoBehaviour {
 
 	// ====================================================
 	private void ApplyWallFriction() {
-		if( hasKnockback ) {
-			return;
-		}
 
 		if( currentSpeed.y >= 0 ) {
 			return;
@@ -506,9 +475,6 @@ public class PlayerController : MonoBehaviour {
 	// ====================================================
 	private void ApplyFriction( float frictionAcc ) {
 
-		if( hasKnockback ) {
-			return;
-		}
 		if( currentSpeed.x == 0 ) {
 			return;
 		}
@@ -531,17 +497,13 @@ public class PlayerController : MonoBehaviour {
 		SoundManager.instance.PlaySound( SoundManager.SoundType.Swap );
 
 		Vector2 previousPos = transform.position;
-		Quaternion previousRotation = transform.rotation;
 		Vector2 previousSpeed = currentSpeed;
 
 		transform.position = VectorUtils.GetPosition3D( swappableEntity.GetPosition() );
 
 		bool wasSwappableEntityGrounded = swappableEntity.physicsController.isGrounded;
-		//transform.rotation = swappableEntity.GetRotation();
-		//currentSpeed = swappableEntity.GetVelocity();
 
 		swappableEntity.SetPosition( previousPos );
-		//swappableEntity.SetRotation( previousRotation );
 		swappableEntity.SetVelocity( previousSpeed );
 
 		PatrollingEnemy patroller = swappableEntity as PatrollingEnemy;

@@ -7,7 +7,6 @@ public class MovablePlatform : MonoBehaviour {
 	// Status Vars
 	private Vector3 lastPosition;
 	private Transform myTransform;
-	private Animator animator;
 
 	// References
 	private PlatformPhysicsController platformPhysicsController;
@@ -18,8 +17,6 @@ public class MovablePlatform : MonoBehaviour {
 		lastPosition = myTransform.position;
 		platformPhysicsController = GetComponent<PlatformPhysicsController>();
 		platformPhysicsController.Initialize();
-		animator = GetComponent<Animator>();
-//		animator.enabled = false;
 		platformPhysicsController.SetCollisionLayers( LayerMask.GetMask( new string[] { "PlayerLayer" } ), LayerMask.GetMask( new string[] { "PlayerLayer" } ) ); 
 	}
 	

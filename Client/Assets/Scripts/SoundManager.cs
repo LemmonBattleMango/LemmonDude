@@ -92,7 +92,6 @@ public class SoundManager : DisposableSingleton<SoundManager> {
 		
 		AudioInfo audioInfo = audioList.clip;
 		AudioClip audioToPlay = audioInfo.clip;
-		float volume = audioInfo.volume;
 		
 		if( audioToPlay == null ) {
 			Log.Error( "SoundManager.PlaySound: Missing sound: " + sound.ToString() );

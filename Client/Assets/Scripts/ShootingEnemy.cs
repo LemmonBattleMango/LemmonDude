@@ -61,7 +61,6 @@ public class ShootingEnemy : PatrollingEnemy {
 		animator.SetTrigger( "shootTrigger" );
 		isAttacking = true;
 		lastAttackTime = MinigameTimeManager.instance.time;
-		float startTime = MinigameTimeManager.instance.time;
 		EnemyBulletController bullet = Instantiate<EnemyBulletController>( bulletPrefab );
 		Vector2 direction = Vector2.right * myTransform.localScale.x;
 		bullet.Configure( direction, null );
