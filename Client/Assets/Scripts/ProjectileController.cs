@@ -16,7 +16,7 @@ public class ProjectileController : MonoBehaviour {
 
 	// ====================================================
 	public void Configure( Vector2 _direction, PlayerController _owner ) {
-		gameObject.layer = LayerMask.NameToLayer( "BulletLayer" );
+		gameObject.layer = LayerMask.NameToLayer( "HitDetector" );
 		direction = _direction.normalized;
 		owner = _owner;
 		//StartCoroutine( AutoDestroyCoroutine() );
@@ -52,15 +52,14 @@ public class ProjectileController : MonoBehaviour {
 	//======================================================
 	protected virtual void OnTriggerEnter2D( Collider2D other ) {	
 
-		PlayerController player = other.GetComponent<PlayerController>();
-		if( player == owner ) {
+		PlayerHitboxReference playerReference = other.GetComponent<PlayerHitboxReference>();
+		if( playerReference != null && playerReference.player == owner ) {
 			Destroy( gameObject );
 			return;
 		}
-
-		SwappableEntity swappableEntity = other.GetComponent<SwappableEntity>();
-		if( swappableEntity != null ) {
-			owner.Swap( swappableEntity );
+		SwappableEntityHitboxReference swappableEntityReference = other.GetComponent<SwappableEntityHitboxReference>();
+		if( swappableEntityReference != null && swappableEntityReference.swappableEntity != null ) {
+			owner.Swap( swappableEntityReference.swappableEntity );
 		}
 		else {
 			SoundManager.instance.PlaySound( SoundManager.SoundType.NoSwap );

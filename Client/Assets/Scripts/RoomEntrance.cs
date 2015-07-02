@@ -6,6 +6,11 @@ public class RoomEntrance : MonoBehaviour {
 	private RoomController targetRoom;
 	private BoxCollider2D myCollider;
 
+	// ====================================================
+	private void Awake() {
+		gameObject.layer = LayerMask.NameToLayer( "Default" );
+	}
+
 	//======================================================
 	public void Configure( RoomController _targetRoom ) {
 		targetRoom = _targetRoom;

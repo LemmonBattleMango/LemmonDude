@@ -48,7 +48,7 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 
 		Application.targetFrameRate = 60;
 		levelLayer = LayerMask.NameToLayer( "LevelLayer" );
-		playerLayer = LayerMask.NameToLayer( "PlayerLayer" );
+		playerLayer = LayerMask.NameToLayer( "MoveBoxLayer" );
 		defaultLayer = LayerMask.NameToLayer( "Default" );
 		weaponLayer = LayerMask.NameToLayer( "WeaponLayer" );
 		deathLayer = LayerMask.NameToLayer( "DeathLayer" );

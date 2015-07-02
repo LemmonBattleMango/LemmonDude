@@ -20,14 +20,18 @@ public class SwappableEntity : MonoBehaviour {
 		}
 		rigidbody2D.isKinematic = true;
 		myTranform = transform;
+		SwappableEntityHitboxReference[] hitboxReferences = GetComponentsInChildren<SwappableEntityHitboxReference>();
+		foreach( SwappableEntityHitboxReference hitboxReference in hitboxReferences ) {
+			hitboxReference.swappableEntity = this;
+		}
 	}
 
 	// ====================================================
 	public virtual void Start() {
 		physicsController = GetComponent<PhysicsController>();
 		physicsController.shouldUseSlopes = true;
-		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer" } ),
-		                                     LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer", "OneWayPlatformLayer" } ) );
+		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer" } ),
+		                                     LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
 		physicsController.Initialize();
 	}
 

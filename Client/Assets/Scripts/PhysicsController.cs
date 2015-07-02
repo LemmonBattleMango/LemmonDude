@@ -36,12 +36,6 @@ public class PhysicsController : MonoBehaviour {
 	public bool didHitACharacterRight = false;
 	[System.NonSerialized]
 	public bool didHitACharacterLeft = false;
-	[System.NonSerialized]
-	public bool didHitACharacterUp = false;
-	[System.NonSerialized]
-	public bool didHitACharacterDown = false;
-	[System.NonSerialized]
-	public bool didHitPlayer = false;
 
 	protected LayerMask collisionLayerMask;
 	protected LayerMask oneWayCollisionLayerMask;
@@ -58,7 +52,7 @@ public class PhysicsController : MonoBehaviour {
 	// =====================================
 	public void Initialize() {
 		offLayer = LayerMask.NameToLayer( "OffLayer" );
-		characterLayer = LayerMask.NameToLayer( "PlayerLayer" );
+		characterLayer = LayerMask.NameToLayer( "MoveBoxLayer" );
 		oneWayCollisionLayer = LayerMask.NameToLayer( "OneWayPlatformLayer" );
 		boxCollider = GetComponent<BoxCollider2D>();
 		colliderCenter = Vector2.Scale( boxCollider.offset, transform.lossyScale );
@@ -212,11 +206,8 @@ public class PhysicsController : MonoBehaviour {
 		float movementMagnitude = deltaPos.magnitude;
 		Vector2 movementDirection = deltaPos.normalized;
 
-		didHitPlayer = false;
 		didHitACharacterRight = false;
 		didHitACharacterLeft = false;
-		didHitACharacterUp = false;
-		didHitACharacterDown = false;
 	
 
 		// check upper collisions
@@ -232,12 +223,6 @@ public class PhysicsController : MonoBehaviour {
 				deltaPos.y = Mathf.Min( deltaPos.y, ray.y );
 				didHitCeiling = true;
 				lastColliderHit = raycastHit.collider;
-				if( !didHitACharacterUp ) {
-					didHitACharacterUp = raycastHit.collider.gameObject.layer == characterLayer;
-				}
-				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
-					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
-				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -262,12 +247,6 @@ public class PhysicsController : MonoBehaviour {
 				deltaPos.y =  Mathf.Max( deltaPos.y, ray.y );
 				isGrounded = true;
 				lastColliderHit = raycastHit.collider;
-				if( !didHitACharacterDown ) {
-					didHitACharacterDown = raycastHit.collider.gameObject.layer == characterLayer;
-				}
-				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
-					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
-				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -289,9 +268,6 @@ public class PhysicsController : MonoBehaviour {
 				if( !didHitACharacterRight ) {
 					didHitACharacterRight = raycastHit.collider.gameObject.layer == characterLayer;
 				}
-				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
-					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
-				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -311,9 +287,6 @@ public class PhysicsController : MonoBehaviour {
 				lastColliderHit = raycastHit.collider;
 				if( !didHitACharacterLeft ) {
 					didHitACharacterLeft = raycastHit.collider.gameObject.layer == characterLayer;
-				}
-				if( !didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
-					didHitPlayer = raycastHit.collider.gameObject == PlayerFactory.instance.currentPlayer.gameObject;
 				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );

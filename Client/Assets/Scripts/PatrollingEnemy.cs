@@ -57,9 +57,6 @@ public class PatrollingEnemy : SwappableEntity {
 			animator.SetBool( "isMoving", false );
 			base.LateUpdate();
 		}
-		if( physicsController.didHitPlayer && PlayerFactory.instance.currentPlayer != null ) {
-			PlayerFactory.instance.currentPlayer.InstaDeath();
-		}
 	}
 
 	// ====================================================

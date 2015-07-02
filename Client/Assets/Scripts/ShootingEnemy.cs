@@ -15,7 +15,7 @@ public class ShootingEnemy : PatrollingEnemy {
 	// ====================================================
 	protected override void Awake() {
 		base.Awake();
-		layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "PlayerLayer" } );
+		layerMask= LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer", "MoveBoxLayer" } );
 	}
 
 	// ====================================================

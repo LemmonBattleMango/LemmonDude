@@ -3,16 +3,24 @@ using System.Collections;
 
 public class KillPlayerController : MonoBehaviour {
 
+	// ====================================================
+	private void Awake() {
+		gameObject.layer = LayerMask.NameToLayer( "HitDetector" );
+	}
+
 	//======================================================
 	void OnTriggerEnter2D( Collider2D other ) {
-		PlayerController player =  other.GetComponent<PlayerController>();
-		if( player != null ) {
-			player.InstaDeath();
+		PlayerHitboxReference playerReference = other.GetComponent<PlayerHitboxReference>();
+		if( playerReference != null && playerReference.player != null ) {
+			playerReference.player.InstaDeath();
 		}
-
-		SwappableEntity swappableEntity = other.GetComponent<SwappableEntity>();
-		if( swappableEntity != null ) {
-			swappableEntity.InstaDeath();
+		
+		SwappableEntityHitboxReference swappableEntityReference = other.GetComponent<SwappableEntityHitboxReference>();
+		if( swappableEntityReference != null && swappableEntityReference.swappableEntity != null ) {
+			PatrollingEnemy patrollingEnemy = swappableEntityReference.swappableEntity as PatrollingEnemy;
+			if( patrollingEnemy != null ) {
+				patrollingEnemy.InstaDeath();
+			}
 		}
 	}
 }

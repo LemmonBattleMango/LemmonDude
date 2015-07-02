@@ -13,6 +13,8 @@ public class BatEntity : SwappableEntity {
 	public override void Start() {
 		base.Start();
 		guardPosition = transform.position;
+		Collider2D collider2D = GetComponent<Collider2D>();
+		collider2D.enabled = false;
 	}
 
 	// ====================================================

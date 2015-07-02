@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour {
 	public PhysicsController physicsController;
 	public Animator animator;
 	public ParticleSystem runningParticles;
+	private PlayerHitboxReference[] hitboxReferences;
 
 	// Status
 	[System.NonSerialized]
@@ -113,10 +114,15 @@ public class PlayerController : MonoBehaviour {
 
 		physicsController = GetComponent<PhysicsController>();
 		physicsController.shouldUseSlopes = false;
-		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer" } ),
-		                                     LayerMask.GetMask(new string[] { "LevelLayer", "PlayerLayer", "OneWayPlatformLayer" } ) );
+		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer" } ),
+		                                     LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
 
 		physicsController.Initialize();
+
+		hitboxReferences = GetComponentsInChildren<PlayerHitboxReference>();
+		foreach( PlayerHitboxReference hitboxReference in hitboxReferences ) {
+			hitboxReference.player = this;
+		}
 		isDead = false;
 	}
 
@@ -144,6 +150,9 @@ public class PlayerController : MonoBehaviour {
 		}
 		Log.Debug( "PlayerController.Die()" );
 		Director.instance.ScreenShake( 0.05f, 0.1f );
+		foreach( PlayerHitboxReference hitboxReference in hitboxReferences ) {
+			hitboxReference.gameObject.SetActive( false );
+		}
 
 		isDead = true;
 		deathVfxAnimator.SetTrigger( "deathTrigger" );
@@ -383,10 +392,6 @@ public class PlayerController : MonoBehaviour {
 				animator.SetBool( "isJumping", true );
 				animator.SetBool( "isWallGrabbing", false );
 			}
-		}
-
-		if( physicsController.didHitACharacterDown || physicsController.didHitACharacterUp || physicsController.didHitACharacterRight || physicsController.didHitACharacterLeft ) {
-			InstaDeath();
 		}
 	}
 

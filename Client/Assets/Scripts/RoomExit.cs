@@ -4,7 +4,12 @@ using System.Collections;
 public class RoomExit : MonoBehaviour {
 
 	private RoomController targetRoom;
-	
+
+	// ====================================================
+	private void Awake() {
+		gameObject.layer = LayerMask.NameToLayer( "Default" );
+	}
+
 	//======================================================
 	public void Configure( RoomController _targetRoom ) {
 		targetRoom = _targetRoom;

@@ -5,6 +5,11 @@ public class WinZone : MonoBehaviour {
 
 	private const float DURATION_SECS = 3f;
 
+	// ====================================================
+	private void Awake() {
+		gameObject.layer = LayerMask.NameToLayer( "Default" );
+	}
+
 	//======================================================
 	private void OnTriggerEnter2D( Collider2D other ) {	
 		

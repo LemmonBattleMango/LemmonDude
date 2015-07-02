@@ -23,31 +23,33 @@ public class SpikeController : MonoBehaviour {
 
 	// =====================================
 	private void OnTriggerStay2D( Collider2D other ) {
-		PlayerController player = other.GetComponent<PlayerController>();
-		if( player != null && !player.isDead ) {
+		PlayerHitboxReference playerReference = other.GetComponent<PlayerHitboxReference>();
+		if( playerReference != null && playerReference.player != null && !playerReference.player.isDead ) {
+			PlayerController player = playerReference.player;
 			Vector2 direction = transform.TransformDirection( localSpikeDirection ).normalized;
 			if( Vector2.Dot( direction, player.currentSpeed - currentSpeed ) >= -0.1f ) {
 				return;
 			}
-
+			
 			SoundManager.instance.PlaySound( SoundManager.SoundType.Spikes );
 			player.InstaDeath();
 			return;
 		}
 
-
-		PatrollingEnemy enemy = other.GetComponent<PatrollingEnemy>();
-		if( enemy != null ) {
-			Vector2 direction = transform.TransformDirection( localSpikeDirection ).normalized;
-			if( Vector2.Dot( direction, enemy.currentSpeed - currentSpeed ) >= -0.1f ) {
+		SwappableEntityHitboxReference swappableEntityReference = other.GetComponent<SwappableEntityHitboxReference>();
+		if( swappableEntityReference != null && swappableEntityReference.swappableEntity != null ) {
+			PatrollingEnemy enemy = swappableEntityReference.swappableEntity as PatrollingEnemy;
+			if( enemy != null ) {
+				Vector2 direction = transform.TransformDirection( localSpikeDirection ).normalized;
+				if( Vector2.Dot( direction, enemy.currentSpeed - currentSpeed ) >= -0.1f ) {
+					return;
+				}
+				
+				SoundManager.instance.PlaySound( SoundManager.SoundType.Spikes );
+				enemy.InstaDeath();
 				return;
 			}
-
-			SoundManager.instance.PlaySound( SoundManager.SoundType.Spikes );
-			enemy.InstaDeath();
-			return;
 		}
-
 	}
 
 	// =====================================
