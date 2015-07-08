@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent (typeof( PhysicsController ) )]
-public class SwappableEntity : MonoBehaviour {
+public class SwappableEntity : Entity {
 
 	[HideInInspector]
 	public PhysicsController physicsController;
@@ -119,5 +119,12 @@ public class SwappableEntity : MonoBehaviour {
 	public void InstaDeath() {
 		SoundManager.instance.PlaySound( SoundManager.SoundType.EnemyDeath );
 		Destroy( gameObject );
+	}
+
+	// ====================================================
+	public override void _OnDrawGizmos( Vector3 position ) {		
+		BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+		Gizmos.DrawWireCube( position, boxCollider2D.size );
+		
 	}
 }

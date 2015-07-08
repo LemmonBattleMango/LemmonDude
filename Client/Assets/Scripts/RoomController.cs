@@ -29,6 +29,12 @@ public class RoomController : MonoBehaviour {
 		if( exit != null ) {
 			exit.Configure( this );
 		}
+
+		EntitySpawner[] entitySpawners = GetComponentsInChildren<EntitySpawner>();
+		foreach( EntitySpawner entitySpawner in entitySpawners ) {
+			entitySpawner.Spawn();
+		}
+
 		PatrollingEnemy[] enemies = GetComponentsInChildren<PatrollingEnemy>();
 		foreach( PatrollingEnemy enemy in enemies ) {
 			enemy.Configure( this );
