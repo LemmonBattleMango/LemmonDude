@@ -3,6 +3,9 @@ using System.Collections;
 
 public class RoomEntrance : MonoBehaviour {
 
+	[System.NonSerialized]
+	public RoomController.Direction direction;
+
 	private RoomController targetRoom;
 	private BoxCollider2D myCollider;
 
@@ -48,7 +51,23 @@ public class RoomEntrance : MonoBehaviour {
 		BoxCollider2D door = go.AddComponent<BoxCollider2D>();
 		door.enabled = false;
 		door.size = new Vector2( myCollider.size.x, 2f* myCollider.size.y );
-		door.transform.position = transform.position - myCollider.size.x * transform.localScale.x * Vector3.right;
+
+		Vector2 dir = Vector2.zero;
+		switch ( direction ) {
+		case RoomController.Direction.DOWN:
+			dir = -Vector2.up;
+			break;
+		case RoomController.Direction.UP:
+			dir = Vector2.up;
+			break;
+		case RoomController.Direction.LEFT:
+			dir = -Vector2.right;
+			break;
+		case RoomController.Direction.RIGHT:
+			dir = Vector2.right;
+			break;
+		}
+		door.transform.position = transform.position - myCollider.size.x * transform.localScale.x * VectorUtils.GetPosition3D( dir );
 		door.enabled = true;
 		gameObject.SetActive( false );
 	}

@@ -2,6 +2,15 @@
 using System.Collections;
 
 public class RoomController : MonoBehaviour {
+
+
+	public enum Direction {
+		RIGHT,
+		LEFT,
+		DOWN,
+		UP
+	}
+
 	public Transform spawnPoint;
 	
 	public Transform levelCorner1;

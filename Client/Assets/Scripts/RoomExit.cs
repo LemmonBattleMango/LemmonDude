@@ -4,6 +4,8 @@ using System.Collections;
 public class RoomExit : MonoBehaviour {
 
 	private RoomController targetRoom;
+	public RoomController.Direction direction;
+
 
 	// ====================================================
 	private void Awake() {
@@ -24,8 +26,23 @@ public class RoomExit : MonoBehaviour {
 		if( MinigameManager.instance.currentRoom != targetRoom ) {
 			return;
 		}
+		Vector2 dir = Vector2.zero;
+		switch ( direction ) {
+		case RoomController.Direction.DOWN:
+			dir = -Vector2.up;
+			break;
+		case RoomController.Direction.UP:
+			dir = Vector2.up;
+			break;
+		case RoomController.Direction.LEFT:
+			dir = -Vector2.right;
+			break;
+		case RoomController.Direction.RIGHT:
+			dir = Vector2.right;
+			break;
+		}
 
-		player.joystickController.ForceDirection( Vector2.right, 0.15f );
+		player.joystickController.ForceDirection( dir, 0.15f );
 		MinigameManager.instance.LoadNextRoom();
 	}
 }

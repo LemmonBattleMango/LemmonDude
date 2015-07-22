@@ -110,6 +110,7 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 		Vector3 deltaPos = currentRoom.transform.position - currentRoom.entrance.transform.position;
 
 		currentRoom.transform.position = lastRoom.exit.transform.position + deltaPos;
+		currentRoom.entrance.direction = lastRoom.exit.direction;
 	}
 
 	//=====================================
