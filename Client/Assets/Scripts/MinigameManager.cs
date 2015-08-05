@@ -22,6 +22,8 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 	public int deathLayer;
 	[System.NonSerialized]
 	public int hitLayer;
+	[System.NonSerialized]
+	public int offLayer;
 
 	public List<RoomController> rooms;
 	[System.NonSerialized]
@@ -53,6 +55,7 @@ public class MinigameManager : DisposableSingleton<MinigameManager> {
 		weaponLayer = LayerMask.NameToLayer( "WeaponLayer" );
 		deathLayer = LayerMask.NameToLayer( "DeathLayer" );
 		hitLayer = LayerMask.NameToLayer( "HitDetector" );
+		offLayer = LayerMask.NameToLayer( "OffLayer" );
 	}
 
 
