@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour {
 		Director.instance.OnPlayerSpawn( this );
 
 		physicsController = GetComponent<PhysicsController>();
-		physicsController.shouldUseSlopes = false;
+		physicsController.shouldUseSlopes = true;
 		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer" } ),
 		                                     LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
 
