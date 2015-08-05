@@ -25,8 +25,8 @@ public class IcicleController : MonoBehaviour {
 		playerDetector.onPlayerDetected = OnPlayerDetected;
 
 		physicsController.shouldUseSlopes = true;
-		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer" } ),
-		                                     LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer" } ) );
+		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer" } ),
+		                                     LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "OneWayPlatformLayer" } ) );
 		
 		physicsController.Initialize();
 	}

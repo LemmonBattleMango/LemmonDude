@@ -36,6 +36,10 @@ public class PhysicsController : MonoBehaviour {
 	public bool didHitACharacterRight = false;
 	[System.NonSerialized]
 	public bool didHitACharacterLeft = false;
+	[System.NonSerialized]
+	public bool didHitAnInvisibleWallRight = false;
+	[System.NonSerialized]
+	public bool didHitAnInvisibleWallLeft = false;
 
 	protected LayerMask collisionLayerMask;
 	protected LayerMask oneWayCollisionLayerMask;
@@ -43,6 +47,7 @@ public class PhysicsController : MonoBehaviour {
 	protected int offLayer;
 	protected int characterLayer;
 	protected int oneWayCollisionLayer;
+	protected int invisibleWallLayer;
 
 	protected Vector2 leftLowerCollisionPoint;
 	protected Vector2 rightLowerCollisionPoint;
@@ -53,6 +58,7 @@ public class PhysicsController : MonoBehaviour {
 	public void Initialize() {
 		offLayer = LayerMask.NameToLayer( "OffLayer" );
 		characterLayer = LayerMask.NameToLayer( "MoveBoxLayer" );
+		invisibleWallLayer = LayerMask.NameToLayer( "InvisibleWallLayer" );
 		oneWayCollisionLayer = LayerMask.NameToLayer( "OneWayPlatformLayer" );
 		boxCollider = GetComponent<BoxCollider2D>();
 		colliderCenter = Vector2.Scale( boxCollider.offset, transform.lossyScale );
@@ -208,7 +214,8 @@ public class PhysicsController : MonoBehaviour {
 
 		didHitACharacterRight = false;
 		didHitACharacterLeft = false;
-	
+		didHitAnInvisibleWallLeft = false;
+		didHitAnInvisibleWallRight = false;
 
 		// check upper collisions
 		Vector2 offset = originalMovement.y > 0 ? LINECAST_OFFSET * Vector2.up : Vector2.zero;
@@ -268,6 +275,9 @@ public class PhysicsController : MonoBehaviour {
 				if( !didHitACharacterRight ) {
 					didHitACharacterRight = raycastHit.collider.gameObject.layer == characterLayer;
 				}
+				if( !didHitAnInvisibleWallRight ) {
+					didHitAnInvisibleWallRight = raycastHit.collider.gameObject.layer == invisibleWallLayer;
+				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );
 		}
@@ -287,6 +297,9 @@ public class PhysicsController : MonoBehaviour {
 				lastColliderHit = raycastHit.collider;
 				if( !didHitACharacterLeft ) {
 					didHitACharacterLeft = raycastHit.collider.gameObject.layer == characterLayer;
+				}
+				if( !didHitAnInvisibleWallLeft ) {
+					didHitAnInvisibleWallLeft = raycastHit.collider.gameObject.layer == invisibleWallLayer;
 				}
 			}
 			//Debug.DrawLine( worldPoint, worldPoint + movementDirection *( movementMagnitud + LINECAST_OFFSET ) );

@@ -30,8 +30,8 @@ public class SwappableEntity : Entity {
 	public virtual void Start() {
 		physicsController = GetComponent<PhysicsController>();
 		physicsController.shouldUseSlopes = true;
-		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer" } ),
-		                                     LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
+		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "MoveBoxLayer" } ),
+		                                     LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
 		physicsController.Initialize();
 	}
 

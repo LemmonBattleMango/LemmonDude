@@ -37,7 +37,7 @@ public class PatrollingEnemy : SwappableEntity {
 		base.Start();
 		myTransform = transform;
 		SetDirectionAsForward();
-		patrolLayerMask = LayerMask.GetMask(new string[] { "LevelLayer", "OneWayPlatformLayer" } );
+		patrolLayerMask = LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "OneWayPlatformLayer" } );
 	}
 
 	// ====================================================

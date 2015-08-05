@@ -114,8 +114,8 @@ public class PlayerController : MonoBehaviour {
 
 		physicsController = GetComponent<PhysicsController>();
 		physicsController.shouldUseSlopes = true;
-		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer" } ),
-		                                     LayerMask.GetMask(new string[] { "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
+		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "MoveBoxLayer" } ),
+		                                     LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
 
 		physicsController.Initialize();
 
@@ -161,8 +161,8 @@ public class PlayerController : MonoBehaviour {
 
 		//yield return StartCoroutine( MinigameTimeManager.instance.WaitForSecs( 0.6f ) );
 		gameObject.layer = MinigameManager.instance.deathLayer;
-		physicsController.SetCollisionLayers( LayerMask.GetMask( new string[] { "LevelLayer" } ),
-		                                     LayerMask.GetMask( new string[] { "LevelLayer", "OneWayPlatformLayer" } ) );
+		physicsController.SetCollisionLayers( LayerMask.GetMask( new string[] { "InvisibleWallLayer", "LevelLayer" } ),
+		                                     LayerMask.GetMask( new string[] { "InvisibleWallLayer", "LevelLayer", "OneWayPlatformLayer" } ) );
 		
 		//transform.position = new Vector3( 1000f, 1000f, -1f );
 		if( onDeath != null ) {
@@ -192,8 +192,8 @@ public class PlayerController : MonoBehaviour {
 
 		Vector2 movementDirection = Vector2.Scale( direction, Vector2.right );
 
-		bool isNextToWall = ( ( physicsController.didHitLeft && !physicsController.didHitACharacterLeft ) ||
-		                     ( physicsController.didHitRight && !physicsController.didHitACharacterRight ) );
+		bool isNextToWall = ( ( physicsController.didHitLeft && !physicsController.didHitACharacterLeft && !physicsController.didHitAnInvisibleWallLeft ) ||
+		                     ( physicsController.didHitRight && !physicsController.didHitACharacterRight && !physicsController.didHitAnInvisibleWallRight ) );
 
 		float fallingDownFactor = 1.0f;
 		if( currentSpeed.y > 0f && isNextToWall ) {
@@ -267,7 +267,7 @@ public class PlayerController : MonoBehaviour {
 			if( movementDirection != Vector2.zero ) {
 				currentSpeed += movementDirection * walkingAccel * deltaTime;
 			}
-			if( movementDirection.x < 0f && !physicsController.didHitACharacterLeft ) {
+			if( movementDirection.x < 0f && !physicsController.didHitACharacterLeft && !physicsController.didHitAnInvisibleWallLeft ) {
 				ApplyWallFriction();
 				if( !isAttacking ) {
 					transform.localScale = new Vector3( 1f, 1f, 1f );
@@ -280,7 +280,7 @@ public class PlayerController : MonoBehaviour {
 			if( movementDirection != Vector2.zero ) {
 				currentSpeed += movementDirection * walkingAccel * deltaTime;
 			}
-			if( movementDirection.x > 0f && !physicsController.didHitACharacterRight ) {
+			if( movementDirection.x > 0f && !physicsController.didHitACharacterRight && !physicsController.didHitAnInvisibleWallRight ) {
 				ApplyWallFriction();
 				if( !isAttacking ) {
 					transform.localScale = new Vector3( -1f, 1f, 1f );
