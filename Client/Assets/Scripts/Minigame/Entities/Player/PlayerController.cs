@@ -525,18 +525,21 @@ public class PlayerController : MonoBehaviour {
 		isSwapping = false;
 		animator.gameObject.SetActive( true );
 		currentSpeed = previousSpeed;
+
+		Vector2 direction = joystickController.GetDirection();
+		if( direction.x > 0.4f ) {
+			currentSpeed.x = maxHorizontalSpeed;
+		}
+		else if( direction.x < -0.4f ) {
+			currentSpeed.x = -maxHorizontalSpeed;
+		}
+		else {
+			currentSpeed.x = 0f;
+		}
+
 		if( wasSwappableEntityGrounded ) {
 			currentSpeed.y = 0f;
-			Vector2 direction = joystickController.GetDirection();
-			if( direction.x > 0.4f ) {
-				currentSpeed.x = maxHorizontalSpeed;
-			}
-			else if( direction.x < -0.4f ) {
-				currentSpeed.x = -maxHorizontalSpeed;
-			}
-			else {
-				currentSpeed.x = 0f;
-			}
+
 		}
 		else {
 			currentSpeed.y = currentSpeed.y < 0f ? 0f : currentSpeed.y;
