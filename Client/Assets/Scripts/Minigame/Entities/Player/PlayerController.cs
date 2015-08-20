@@ -203,7 +203,7 @@ public class PlayerController : MonoBehaviour {
 		// Apply Gravity
 		currentSpeed -= Vector2.up * gravityAccel * deltaTime * fallingDownFactor;
 
-		if( physicsController.isGrounded || physicsController.didHitLeft || physicsController.didHitRight ) {
+		if( physicsController.isGrounded || isNextToWall ) {
 			lastAbleToJumpTime = MinigameTimeManager.instance.time;
 		}
 
