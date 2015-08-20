@@ -47,7 +47,7 @@ public class RoomEntrance : MonoBehaviour {
 		GameObject go = new GameObject();
 		go.name = "door";
 		go.transform.parent = targetRoom.transform;
-		go.layer = MinigameManager.instance.levelLayer;
+		go.layer = MinigameManager.instance.invisibleWallLayer;
 		BoxCollider2D door = go.AddComponent<BoxCollider2D>();
 		door.enabled = false;
 		door.size = new Vector2( myCollider.size.x, 2f* myCollider.size.y );

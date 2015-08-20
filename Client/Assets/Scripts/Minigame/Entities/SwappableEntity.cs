@@ -12,6 +12,9 @@ public class SwappableEntity : Entity {
 	public float groundFrictionAccel = 5f;
 	protected Transform myTranform;
 
+	protected RoomController room;
+	protected bool isEnabled{ get{ return MinigameManager.instance.currentRoom == room; } }
+
 	// ====================================================
 	protected virtual void Awake() {
 		Rigidbody2D rigidbody2D = GetComponent<Rigidbody2D>();
@@ -33,6 +36,11 @@ public class SwappableEntity : Entity {
 		physicsController.SetCollisionLayers( LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "MoveBoxLayer" } ),
 		                                     LayerMask.GetMask(new string[] { "InvisibleWallLayer", "LevelLayer", "MoveBoxLayer", "OneWayPlatformLayer" } ) );
 		physicsController.Initialize();
+	}
+
+	// ====================================================
+	public void Configure( RoomController _room ) {
+		room = _room;
 	}
 
 	//=====================================

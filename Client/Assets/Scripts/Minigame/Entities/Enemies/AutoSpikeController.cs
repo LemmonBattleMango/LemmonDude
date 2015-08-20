@@ -21,7 +21,7 @@ public class AutoSpikeController : MonoBehaviour {
 	}
 
 	// ====================================================
-	private void OnPlayerDetected( PlayerDetector playerDetector ) {
+	private void OnPlayerDetected( PlayerController player, PlayerDetector playerDetector ) {
 		StartCoroutine( ActivateCorrutine() );
 	}
 

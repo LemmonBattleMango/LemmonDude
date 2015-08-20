@@ -15,21 +15,12 @@ public class PatrollingEnemy : SwappableEntity {
 	private float lastDirectionChange;
 
 	protected LayerMask patrolLayerMask;
-	protected RoomController room;
 	protected Animator animator;
-
-	protected bool isEnabled{ get{ return MinigameManager.instance.currentRoom == room; } }
-
 
 	// ====================================================
 	protected override void Awake() {
 		base.Awake();
 		animator = gameObject.GetComponentInChildren<Animator>();
-	}
-
-	// ====================================================
-	public void Configure( RoomController _room ) {
-		room = _room;
 	}
 
 	// ====================================================

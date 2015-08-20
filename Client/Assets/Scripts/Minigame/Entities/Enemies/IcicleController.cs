@@ -32,7 +32,7 @@ public class IcicleController : MonoBehaviour {
 	}
 
 	// ====================================================
-	private void OnPlayerDetected( PlayerDetector playerDetector ) {
+	private void OnPlayerDetected( PlayerController player, PlayerDetector playerDetector ) {
 		playerDetector.onPlayerDetected = null;
 		playerDetector.gameObject.SetActive( false );
 		StartCoroutine( ActivateCorrutine() );
