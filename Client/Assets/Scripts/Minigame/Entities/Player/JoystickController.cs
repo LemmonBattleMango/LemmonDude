@@ -5,7 +5,8 @@ public class JoystickController : MonoBehaviour {
 
 	public enum JoystickType {
 		XBOX,
-		PS4
+		PS4,
+		OSX
 	}
 
 	private JoystickType joystickType;
@@ -31,7 +32,11 @@ public class JoystickController : MonoBehaviour {
 	const string RIGHT_VERTICAL_AXIS_ID = "R_YAxis_1";
 	const string DPAD_HORIZONTAL_DPAD_AXIS_ID_PS4 = "Dpad_XAxis_PS4_1";
 	const string DPAD_VERTICAL_DPAD_AXIS_ID_PS4 = "Dpad_YAxis_PS4_1";
-	
+
+	// XBOX joystick
+	const string JUMP_BUTTON_ID_OSX = "OSX_A_1";
+	const string FIRE_BUTTON_ID_OSX = "OSX_X_1";
+
 	private Vector2 forcedDirection;
 	private float forcedDirectionExpirationTime = -1f;
 
@@ -42,10 +47,34 @@ public class JoystickController : MonoBehaviour {
 		get{ return ( joystickType == JoystickType.XBOX ) ? DPAD_HORIZONTAL_AXIS_ID_XBOX : DPAD_HORIZONTAL_DPAD_AXIS_ID_PS4; }
 	}
 	public string jumpButtonId {
-		get{ return ( joystickType == JoystickType.XBOX ) ? JUMP_BUTTON_ID_XBOX : JUMP_BUTTON_ID_PS4; }
+		get{ 
+			switch( joystickType ) {
+				case JoystickType.OSX : 
+					return JUMP_BUTTON_ID_OSX;
+					break;
+				case JoystickType.PS4:
+					return JUMP_BUTTON_ID_PS4;
+					break;
+				default:
+					break;
+			}
+			return JUMP_BUTTON_ID_XBOX;
+		}
 	}
 	public string firekButtonId {
-		get{ return ( joystickType == JoystickType.XBOX ) ? FIRE_BUTTON_ID_XBOX : FIRE_BUTTON_ID_PS4; }
+		get{
+			switch( joystickType ) {
+				case JoystickType.OSX : 
+					return FIRE_BUTTON_ID_OSX;
+					break;
+				case JoystickType.PS4:
+					return FIRE_BUTTON_ID_PS4;
+					break;
+				default:
+					break;
+			}
+			return FIRE_BUTTON_ID_XBOX;
+		}
 	}
 	
 	//======================================================
